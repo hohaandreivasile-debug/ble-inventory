@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blue Line Energy — Registru & Stoc Piese</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07090a;--bg1:#090c0e;--bg2:#0b0f12;--bg3:#0c1014;--bg4:#080b0d;--brd:#151c22;--brd2:#1e2830;--tx:#e0e6ec;--tx2:#8aa8b8;--tx3:#6a8898;--tx4:#5a7888;--tx5:#2a3840;--acc:#0ea5e9;--grn:#34d399;--ylw:#fbbf24;--red:#f87171;--blu:#60a5fa;--fn:'IBM Plex Mono',monospace;--fh:'Outfit',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}body{background:transparent;color:var(--tx);font-family:var(--fn);font-size:18px;overflow-x:hidden}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:3px}
+input,select,textarea{background:var(--bg3);border:1px solid var(--brd2);color:var(--tx);padding:10px 14px;border-radius:4px;font-family:var(--fn);font-size:16px;outline:none;width:100%;transition:border-color .2s}
+input:focus,select:focus,textarea:focus{border-color:rgba(14,165,233,.25)}select option{background:var(--bg3)}textarea{resize:vertical}
+.b{padding:6px 12px;border-radius:4px;cursor:pointer;font-family:var(--fn);font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;transition:all .15s;border:1px solid transparent;display:inline-block}
+.bp{background:linear-gradient(135deg,#0c4a6e,#0369a1);color:#bae6fd;border-color:rgba(14,165,233,.19)}.bp:hover{background:linear-gradient(135deg,#0369a1,#0284c7)}
+.bs{background:#0f1318;color:var(--tx2);border-color:var(--brd2)}.bs:hover{border-color:var(--tx3);color:var(--tx)}
+.bd{background:#1a0808;color:var(--red);border-color:rgba(248,113,113,.13)}.bd:hover{background:#2a0c0c}
+.bg{background:linear-gradient(135deg,#064e3b,#047857);color:#a7f3d0;border-color:rgba(16,185,129,.19)}.bg:hover{background:linear-gradient(135deg,#047857,#059669)}
+.bo{background:linear-gradient(135deg,#7c2d12,#c2410c);color:#fed7aa;border-color:rgba(249,115,22,.25)}.bo:hover{background:linear-gradient(135deg,#c2410c,#ea580c)}
+.tg{display:inline-block;padding:2px 7px;border-radius:3px;font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase}
+.lbl{font-size:12px;color:var(--tx4);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:3px;font-weight:600}
+.ib{background:var(--bg4);border:1px solid var(--brd);border-radius:5px;padding:12px}
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;transition:opacity .2s}.mo.show{opacity:1}
+.ml{background:var(--bg2);border:1px solid rgba(14,165,233,.08);border-radius:10px;max-width:800px;width:96%;max-height:92vh;overflow-y:auto;box-shadow:0 0 80px rgba(14,165,233,.06);transform:translateY(10px);transition:transform .2s}.mo.show .ml{transform:translateY(0)}
+.wtab{padding:10px 18px;font-size:15px;font-weight:600;cursor:pointer;border:none;background:none;color:#8ab0c0;border-bottom:2px solid transparent;transition:all .15s;font-family:var(--fn)}.wtab.ac{color:var(--acc);border-bottom-color:var(--acc)}.wtab:hover{color:#93c5fd}
+.stab{padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:rgba(12,16,20,.7);color:#8ab0c0;border-radius:4px;font-family:var(--fn);transition:all .15s;border:1px solid var(--brd)}.stab.ac{background:rgba(14,165,233,.1);color:var(--acc);border-color:rgba(14,165,233,.25)}
+.row{transition:background .1s}.row:hover{background:#0d1216}
+.img-hero{width:100%;height:220px;object-fit:cover;border-radius:10px 10px 0 0;display:block;border-bottom:1px solid var(--brd)}
+.img-placeholder{width:100%;height:220px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0d1216,var(--bg2));border-radius:10px 10px 0 0;border-bottom:1px solid var(--brd)}
+.img-strip{display:flex;gap:6px;padding:8px 16px;overflow-x:auto;border-bottom:1px solid var(--brd)}
+.img-thumb{width:80px;height:60px;object-fit:cover;border-radius:4px;border:2px solid var(--brd);cursor:pointer;transition:border-color .15s;flex-shrink:0}.img-thumb:hover{border-color:var(--acc)}
+.img-thumb.active{border-color:var(--acc)}
+.img-rm{position:absolute;top:-4px;right:-4px;width:16px;height:16px;border-radius:50%;background:var(--red);color:#fff;border:none;font-size:9px;cursor:pointer;line-height:16px;text-align:center;display:none}.img-wrap:hover .img-rm{display:block}
+.img-wrap{position:relative;flex-shrink:0}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.fullscreen-overlay{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:200;display:flex;align-items:center;justify-content:center;cursor:zoom-out;opacity:0;transition:opacity .25s}
+.fullscreen-overlay.show{opacity:1}
+.fullscreen-overlay img{max-width:95vw;max-height:95vh;object-fit:contain;border-radius:6px;box-shadow:0 0 60px rgba(0,0,0,.5)}
+.fullscreen-close{position:fixed;top:16px;right:16px;z-index:201;background:rgba(255,255,255,.15);color:#fff;border:none;width:40px;height:40px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.fullscreen-close:hover{background:rgba(255,255,255,.3)}
+.img-hero{cursor:zoom-in}
+.img-thumb{cursor:pointer}
+
+/* SCENIC BACKGROUND */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: 
+    /* Sky gradient */
+    linear-gradient(180deg, 
+      #87CEEB 0%, 
+      #a8d8f0 30%,
+      #c5e4f5 50%,
+      #d4ecf7 65%,
+      #e8f4f8 75%,
+      #f0f7f0 85%,
+      #4a8c3f 85.1%,
+      #3d7a35 90%,
+      #2d6b28 100%
+    );
+}
+
+/* Hills overlay with curves */
+body::after {
+  content: '';
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 35vh;
+  z-index: -1;
+  background: 
+    /* Rolling hills */
+    radial-gradient(ellipse 80% 60% at 15% 100%, #3a8035 0%, transparent 70%),
+    radial-gradient(ellipse 70% 50% at 45% 100%, #4a9040 0%, transparent 65%),
+    radial-gradient(ellipse 90% 55% at 75% 100%, #358030 0%, transparent 70%),
+    radial-gradient(ellipse 60% 45% at 95% 100%, #4a8c3f 0%, transparent 60%);
+}
+
+/* Wind turbines as fixed SVG overlay */
+.bg-turbines {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.70;
+}
+
+/* Semi-transparent content overlay for readability */
+#app {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  background: rgba(7, 9, 10, 0.55);
+  backdrop-filter: blur(1px);
+}
+
+/* Clouds animation */
+@keyframes cloudFloat {
+  0% { transform: translateX(-10px); }
+  50% { transform: translateX(10px); }
+  100% { transform: translateX(-10px); }
+}
+@keyframes cloudFloat2 {
+  0% { transform: translateX(8px); }
+  50% { transform: translateX(-8px); }
+  100% { transform: translateX(8px); }
+}
+@keyframes bladeSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+
+/* === THEME SYSTEM === */
+body.theme-scenic .bg-turbines{opacity:.70}
+body.theme-scenic #app{background:rgba(7,9,10,.55)}
+
+body.theme-navy{background:#0a1423!important}
+body.theme-navy .bg-turbines{display:none}
+body.theme-navy #app{background:rgba(10,20,35,.92)}
+body.theme-navy header{background:rgba(14,26,46,.9)!important}
+
+body.theme-slate{background:#1e293b!important}
+body.theme-slate .bg-turbines{display:none}
+body.theme-slate #app{background:rgba(30,41,59,.92)}
+body.theme-slate header{background:rgba(39,53,72,.9)!important}
+body.theme-slate .stab{background:rgba(39,53,72,.8)!important}
+
+body.theme-forest{background:#05140e!important}
+body.theme-forest .bg-turbines{display:none}
+body.theme-forest #app{background:rgba(5,20,14,.92)}
+body.theme-forest header{background:rgba(10,32,24,.9)!important}
+body.theme-forest .stab{background:rgba(10,32,24,.8)!important}
+
+body.theme-light{background:#f0f4f8!important}
+body.theme-light .bg-turbines{display:none}
+body.theme-light #app{background:rgba(240,244,248,.96);color:#1e293b}
+body.theme-light header{background:rgba(255,255,255,.95)!important;border-color:#e2e8f0!important}
+body.theme-light h1{color:#1e293b!important}
+body.theme-light h1 span{color:#0369a1!important}
+body.theme-light .wtab{color:#64748b!important}
+body.theme-light .wtab.ac{color:#0369a1!important;border-bottom-color:#0369a1!important}
+body.theme-light .stab{background:#fff!important;color:#64748b!important;border-color:#e2e8f0!important}
+body.theme-light .stab.ac{background:rgba(3,105,161,.08)!important;color:#0369a1!important;border-color:rgba(3,105,161,.3)!important}
+body.theme-light table{color:#334155}
+body.theme-light .row:hover{background:rgba(14,165,233,.04)!important}
+body.theme-light th{color:#64748b!important}
+body.theme-light td{color:#475569!important}
+body.theme-light input,body.theme-light select,body.theme-light textarea{background:#fff!important;border-color:#d1d5db!important;color:#1e293b!important}
+body.theme-light .ib{background:#f8fafc!important;border-color:#e2e8f0!important}
+body.theme-light .ml{background:#fff!important;border-color:#e2e8f0!important}
+body.theme-light .tg{font-weight:800}
+body.theme-light .lbl{color:#64748b!important}
+body.theme-light .b.bs{background:#f1f5f9!important;color:#475569!important;border-color:#d1d5db!important}
+body.theme-light .b.bp{background:linear-gradient(135deg,#0369a1,#0284c7)!important;color:#fff!important}
+
+body.theme-dark{background:#07090a!important}
+body.theme-dark .bg-turbines{display:none}
+body.theme-dark #app{background:rgba(7,9,10,.98)}
+body.theme-dark header{background:rgba(9,12,14,.98)!important}
+
+/* Theme selector button */
+.theme-btn{position:relative;display:inline-block}
+.theme-menu{position:absolute;top:100%;right:0;margin-top:6px;background:rgba(11,15,18,.95);border:1px solid var(--brd);border-radius:8px;padding:8px;min-width:200px;z-index:60;display:none;backdrop-filter:blur(10px);box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.theme-menu.show{display:block}
+.theme-opt{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:6px;cursor:pointer;transition:background .15s;font-size:13px;color:#c8cfd5;border:none;background:none;width:100%;text-align:left;font-family:var(--fn)}
+.theme-opt:hover{background:rgba(14,165,233,.1)}
+.theme-opt.active{background:rgba(14,165,233,.15);color:var(--acc)}
+.theme-dot{width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,.2);flex-shrink:0}
+body.theme-light .theme-menu{background:rgba(255,255,255,.95)!important;border-color:#e2e8f0!important}
+body.theme-light .theme-opt{color:#334155!important}
+body.theme-light .theme-opt:hover{background:rgba(3,105,161,.06)!important}
+body.theme-light .theme-opt.active{color:#0369a1!important}
+
+
+/* === GOLDEN SUNSET OFFSHORE THEME === */
+body.theme-sunset{background:#1a1008!important}
+body.theme-sunset .bg-turbines{display:none}
+body.theme-sunset #app{background:rgba(20,14,5,.58)}
+body.theme-sunset header{background:rgba(25,18,8,.78)!important;backdrop-filter:blur(8px)!important}
+body.theme-sunset h1{color:#f5e6c8!important}
+body.theme-sunset h1 span{color:#f0a030!important}
+body.theme-sunset .wtab{color:#a08860!important}
+body.theme-sunset .wtab.ac{color:#f0a030!important;border-bottom-color:#f0a030!important}
+body.theme-sunset .stab{background:rgba(30,22,10,.7)!important;color:#b09870!important;border-color:rgba(200,160,80,.15)!important}
+body.theme-sunset .stab.ac{background:rgba(240,160,48,.1)!important;color:#f0a030!important;border-color:rgba(240,160,48,.3)!important}
+body.theme-sunset .b.bp{background:linear-gradient(135deg,#8b5e14,#b8860b)!important;color:#fef3c7!important;border-color:rgba(240,160,48,.3)!important}
+body.theme-sunset .b.bs{background:rgba(30,22,10,.6)!important;color:#b09870!important;border-color:rgba(200,160,80,.2)!important}
+body.theme-sunset .b.bg{background:linear-gradient(135deg,#5a6e20,#7a8e30)!important}
+body.theme-sunset .b.bo{background:linear-gradient(135deg,#8b4513,#cd6600)!important}
+body.theme-sunset input,body.theme-sunset select,body.theme-sunset textarea{background:rgba(20,14,5,.7)!important;border-color:rgba(200,160,80,.2)!important;color:#e8d8b8!important}
+body.theme-sunset .ib{background:rgba(20,14,5,.5)!important;border-color:rgba(200,160,80,.15)!important}
+body.theme-sunset .ml{background:rgba(25,18,8,.95)!important;border-color:rgba(240,160,48,.1)!important}
+body.theme-sunset .lbl{color:#907850!important}
+body.theme-sunset th{color:#907850!important}
+body.theme-sunset .row:hover{background:rgba(240,160,48,.06)!important}
+
+/* Sunset scene */
+.sunset-scene{position:fixed;inset:0;z-index:-1;overflow:hidden}
+.sunset-sky{position:absolute;inset:0;background:linear-gradient(180deg,#2c1810 0%,#5a2a10 15%,#c06820 30%,#e8a040 45%,#f0c060 55%,#e8b848 62%,#c09030 68%,#1a3a5a 68.5%,#15304a 75%,#102540 100%)}
+.sunset-sun{position:absolute;width:180px;height:180px;border-radius:50%;top:18%;left:50%;transform:translateX(-50%);background:radial-gradient(circle,#fff8e0 0%,#ffe080 30%,#f0a030 60%,rgba(240,160,48,0) 100%);box-shadow:0 0 80px 40px rgba(255,200,80,.3),0 0 160px 80px rgba(240,160,48,.15);animation:sunPulse 6s ease-in-out infinite}
+@keyframes sunPulse{0%,100%{box-shadow:0 0 80px 40px rgba(255,200,80,.3),0 0 160px 80px rgba(240,160,48,.15)}50%{box-shadow:0 0 100px 50px rgba(255,200,80,.35),0 0 200px 100px rgba(240,160,48,.2)}}
+
+/* Water */
+.sunset-water{position:absolute;bottom:0;left:0;right:0;height:35%;background:linear-gradient(180deg,rgba(26,58,90,.6) 0%,rgba(15,30,50,.8) 100%)}
+.sunset-water::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 8px,rgba(240,180,80,.04) 8px,rgba(240,180,80,.04) 10px);animation:waterShimmer 3s ease-in-out infinite}
+.sunset-water::after{content:'';position:absolute;top:0;left:30%;right:30%;height:60%;background:linear-gradient(180deg,rgba(255,200,80,.12) 0%,transparent 100%);filter:blur(20px);animation:waterReflect 4s ease-in-out infinite}
+@keyframes waterShimmer{0%,100%{transform:translateY(0)}50%{transform:translateY(2px)}}
+@keyframes waterReflect{0%,100%{opacity:.8;transform:scaleX(1)}50%{opacity:1;transform:scaleX(1.05)}}
+
+/* Clouds in sunset */
+.sunset-cloud{position:absolute;border-radius:50%;filter:blur(2px)}
+@keyframes driftRight{0%{transform:translateX(-5px)}50%{transform:translateX(5px)}100%{transform:translateX(-5px)}}
+@keyframes driftLeft{0%{transform:translateX(5px)}50%{transform:translateX(-5px)}100%{transform:translateX(5px)}}
+
+/* Offshore turbine silhouettes */
+.oturbine{position:absolute;bottom:32%}
+.oturbine .pole{width:4px;background:linear-gradient(180deg,#1a1008,#2a1a10);position:absolute;bottom:0;left:50%;transform:translateX(-50%);border-radius:2px}
+.oturbine .nacelle{width:12px;height:6px;background:#1a1008;position:absolute;top:0;left:50%;transform:translateX(-50%);border-radius:2px}
+.oturbine .blades{position:absolute;top:3px;left:50%;transform-origin:0 0}
+.oturbine .blade{position:absolute;width:3px;background:linear-gradient(0deg,#2a1a10,#3a2a18);border-radius:2px;transform-origin:bottom center;left:-1.5px}
+@keyframes spin1{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes spin2{from{transform:rotate(120deg)}to{transform:rotate(480deg)}}
+@keyframes spin3{from{transform:rotate(60deg)}to{transform:rotate(420deg)}}
+
+/* Reflection lines for turbines */
+.oturbine .reflection{position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);width:2px;height:40px;background:linear-gradient(180deg,rgba(30,20,10,.4),transparent);filter:blur(1px);animation:waterShimmer 3s ease-in-out infinite}
+
+body:not(.theme-sunset) .sunset-scene{display:none}
+
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+</head>
+<body>
+<div class="bg-turbines">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%">
+  <!-- Sky -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5ba3d9"/>
+      <stop offset="60%" stop-color="#87CEEB"/>
+      <stop offset="80%" stop-color="#a8d8f0"/>
+      <stop offset="100%" stop-color="#c5e8c5"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="80%" cy="15%" r="20%">
+      <stop offset="0%" stop-color="#fff8e1" stop-opacity=".6"/>
+      <stop offset="100%" stop-color="#fff8e1" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#sky)"/>
+  <rect width="1920" height="1080" fill="url(#sun)"/>
+  
+  <!-- Clouds -->
+  <g opacity=".85">
+    <ellipse cx="250" cy="150" rx="80" ry="30" fill="white" style="animation:cloudFloat 8s ease-in-out infinite"/>
+    <ellipse cx="290" cy="140" rx="60" ry="25" fill="white" style="animation:cloudFloat 8s ease-in-out infinite"/>
+    <ellipse cx="700" cy="100" rx="90" ry="35" fill="white" style="animation:cloudFloat2 10s ease-in-out infinite"/>
+    <ellipse cx="750" cy="90" rx="65" ry="28" fill="white" style="animation:cloudFloat2 10s ease-in-out infinite"/>
+    <ellipse cx="1300" cy="130" rx="70" ry="28" fill="white" style="animation:cloudFloat 12s ease-in-out infinite"/>
+    <ellipse cx="1340" cy="120" rx="55" ry="22" fill="white" style="animation:cloudFloat 12s ease-in-out infinite"/>
+    <ellipse cx="1650" cy="170" rx="60" ry="22" fill="white" style="animation:cloudFloat2 9s ease-in-out infinite"/>
+  </g>
+  
+  <!-- Hills -->
+  <path d="M0 750 Q200 680 400 720 Q600 760 800 710 Q1000 660 1200 700 Q1400 740 1600 690 Q1800 650 1920 700 L1920 1080 L0 1080Z" fill="#4a9040"/>
+  <path d="M0 800 Q300 740 500 770 Q700 800 900 760 Q1100 720 1300 760 Q1500 800 1700 750 Q1850 720 1920 750 L1920 1080 L0 1080Z" fill="#3d7a35"/>
+  <path d="M0 850 Q250 810 450 830 Q650 850 850 820 Q1050 790 1250 820 Q1450 850 1650 810 Q1800 790 1920 820 L1920 1080 L0 1080Z" fill="#2d6b28"/>
+  
+  <!-- Turbine 1 (far left, small) -->
+  <g transform="translate(180,520)">
+    <rect x="-3" y="0" width="6" height="200" fill="#e0e0e0" rx="2"/>
+    <g style="animation:bladeSpin 6s linear infinite;transform-origin:0 0">
+      <rect x="-2" y="-90" width="4" height="90" fill="#f0f0f0" rx="2" transform="rotate(0)"/>
+      <rect x="-2" y="-90" width="4" height="90" fill="#f0f0f0" rx="2" transform="rotate(120)"/>
+      <rect x="-2" y="-90" width="4" height="90" fill="#f0f0f0" rx="2" transform="rotate(240)"/>
+    </g>
+    <circle cx="0" cy="0" r="6" fill="#d0d0d0"/>
+  </g>
+  
+  <!-- Turbine 2 (left, medium) -->
+  <g transform="translate(420,440)">
+    <rect x="-4" y="0" width="8" height="270" fill="#e0e0e0" rx="3"/>
+    <g style="animation:bladeSpin 5s linear infinite;transform-origin:0 0">
+      <rect x="-3" y="-120" width="6" height="120" fill="#f0f0f0" rx="3" transform="rotate(30)"/>
+      <rect x="-3" y="-120" width="6" height="120" fill="#f0f0f0" rx="3" transform="rotate(150)"/>
+      <rect x="-3" y="-120" width="6" height="120" fill="#f0f0f0" rx="3" transform="rotate(270)"/>
+    </g>
+    <circle cx="0" cy="0" r="8" fill="#d0d0d0"/>
+  </g>
+  
+  <!-- Turbine 3 (center, large) -->
+  <g transform="translate(750,380)">
+    <rect x="-5" y="0" width="10" height="320" fill="#e0e0e0" rx="3"/>
+    <g style="animation:bladeSpin 4.5s linear infinite;transform-origin:0 0">
+      <rect x="-3" y="-140" width="6" height="140" fill="#f5f5f5" rx="3" transform="rotate(15)"/>
+      <rect x="-3" y="-140" width="6" height="140" fill="#f5f5f5" rx="3" transform="rotate(135)"/>
+      <rect x="-3" y="-140" width="6" height="140" fill="#f5f5f5" rx="3" transform="rotate(255)"/>
+    </g>
+    <circle cx="0" cy="0" r="9" fill="#d0d0d0"/>
+  </g>
+  
+  <!-- Turbine 4 (right, large) -->
+  <g transform="translate(1150,400)">
+    <rect x="-5" y="0" width="10" height="300" fill="#e0e0e0" rx="3"/>
+    <g style="animation:bladeSpin 5.5s linear infinite;transform-origin:0 0">
+      <rect x="-3" y="-135" width="6" height="135" fill="#f0f0f0" rx="3" transform="rotate(60)"/>
+      <rect x="-3" y="-135" width="6" height="135" fill="#f0f0f0" rx="3" transform="rotate(180)"/>
+      <rect x="-3" y="-135" width="6" height="135" fill="#f0f0f0" rx="3" transform="rotate(300)"/>
+    </g>
+    <circle cx="0" cy="0" r="9" fill="#d0d0d0"/>
+  </g>
+  
+  <!-- Turbine 5 (far right, medium) -->
+  <g transform="translate(1500,460)">
+    <rect x="-4" y="0" width="8" height="250" fill="#e0e0e0" rx="3"/>
+    <g style="animation:bladeSpin 6.5s linear infinite;transform-origin:0 0">
+      <rect x="-3" y="-110" width="6" height="110" fill="#f0f0f0" rx="3" transform="rotate(45)"/>
+      <rect x="-3" y="-110" width="6" height="110" fill="#f0f0f0" rx="3" transform="rotate(165)"/>
+      <rect x="-3" y="-110" width="6" height="110" fill="#f0f0f0" rx="3" transform="rotate(285)"/>
+    </g>
+    <circle cx="0" cy="0" r="7" fill="#d0d0d0"/>
+  </g>
+  
+  <!-- Turbine 6 (far right, small) -->
+  <g transform="translate(1750,500)">
+    <rect x="-3" y="0" width="6" height="210" fill="#e0e0e0" rx="2"/>
+    <g style="animation:bladeSpin 7s linear infinite;transform-origin:0 0">
+      <rect x="-2" y="-85" width="4" height="85" fill="#f0f0f0" rx="2" transform="rotate(80)"/>
+      <rect x="-2" y="-85" width="4" height="85" fill="#f0f0f0" rx="2" transform="rotate(200)"/>
+      <rect x="-2" y="-85" width="4" height="85" fill="#f0f0f0" rx="2" transform="rotate(320)"/>
+    </g>
+    <circle cx="0" cy="0" r="5" fill="#d0d0d0"/>
+  </g>
+</svg>
+</div>
+<div class="sunset-scene">
+  <div class="sunset-sky"></div>
+  <div class="sunset-sun"></div>
+  
+  <!-- Clouds -->
+  <div class="sunset-cloud" style="top:8%;left:10%;width:120px;height:30px;background:rgba(200,120,40,.25);animation:driftRight 12s ease-in-out infinite"></div>
+  <div class="sunset-cloud" style="top:12%;left:15%;width:80px;height:22px;background:rgba(220,140,50,.2);animation:driftRight 12s ease-in-out infinite"></div>
+  <div class="sunset-cloud" style="top:5%;right:20%;width:150px;height:35px;background:rgba(180,100,30,.3);animation:driftLeft 15s ease-in-out infinite"></div>
+  <div class="sunset-cloud" style="top:10%;right:15%;width:90px;height:25px;background:rgba(200,110,35,.2);animation:driftLeft 15s ease-in-out infinite"></div>
+  <div class="sunset-cloud" style="top:18%;left:35%;width:200px;height:28px;background:rgba(160,90,30,.15);animation:driftRight 18s ease-in-out infinite"></div>
+  <div class="sunset-cloud" style="top:22%;right:35%;width:160px;height:24px;background:rgba(180,100,35,.2);animation:driftLeft 14s ease-in-out infinite"></div>
+  <div class="sunset-cloud" style="top:3%;left:55%;width:100px;height:20px;background:rgba(150,80,25,.2);animation:driftRight 16s ease-in-out infinite"></div>
+
+  <div class="sunset-water"></div>
+
+  <!-- Offshore Turbines (silhouettes) -->
+  <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+    <!-- Turbine 1 far left small -->
+    <g transform="translate(150,380)">
+      <rect x="-2" y="0" width="4" height="300" fill="#1a1008" rx="2"/>
+      <g style="animation:spin1 8s linear infinite;transform-origin:0 0">
+        <rect x="-1.5" y="-70" width="3" height="70" fill="#2a1810" rx="1.5"/>
+        <rect x="-1.5" y="-70" width="3" height="70" fill="#2a1810" rx="1.5" transform="rotate(120)"/>
+        <rect x="-1.5" y="-70" width="3" height="70" fill="#2a1810" rx="1.5" transform="rotate(240)"/>
+      </g>
+      <circle cx="0" cy="0" r="4" fill="#1a1008"/>
+      <rect x="-1" y="300" width="2" height="50" fill="rgba(30,20,10,.2)" style="filter:blur(1px)"/>
+    </g>
+
+    <!-- Turbine 2 left medium -->
+    <g transform="translate(380,320)">
+      <rect x="-3" y="0" width="6" height="360" fill="#1a1008" rx="2"/>
+      <g style="animation:spin2 7s linear infinite;transform-origin:0 0">
+        <rect x="-2" y="-100" width="4" height="100" fill="#2a1810" rx="2"/>
+        <rect x="-2" y="-100" width="4" height="100" fill="#2a1810" rx="2" transform="rotate(120)"/>
+        <rect x="-2" y="-100" width="4" height="100" fill="#2a1810" rx="2" transform="rotate(240)"/>
+      </g>
+      <circle cx="0" cy="0" r="5" fill="#1a1008"/>
+      <rect x="-1.5" y="360" width="3" height="60" fill="rgba(30,20,10,.2)" style="filter:blur(1px)"/>
+    </g>
+
+    <!-- Turbine 3 center-left large -->
+    <g transform="translate(650,270)">
+      <rect x="-4" y="0" width="8" height="410" fill="#1a1008" rx="3"/>
+      <g style="animation:spin3 6s linear infinite;transform-origin:0 0">
+        <rect x="-2.5" y="-130" width="5" height="130" fill="#2a1810" rx="2"/>
+        <rect x="-2.5" y="-130" width="5" height="130" fill="#2a1810" rx="2" transform="rotate(120)"/>
+        <rect x="-2.5" y="-130" width="5" height="130" fill="#2a1810" rx="2" transform="rotate(240)"/>
+      </g>
+      <circle cx="0" cy="0" r="6" fill="#1a1008"/>
+      <rect x="-2" y="410" width="4" height="70" fill="rgba(30,20,10,.25)" style="filter:blur(2px)"/>
+    </g>
+
+    <!-- Turbine 4 center BIGGEST -->
+    <g transform="translate(960,240)">
+      <rect x="-5" y="0" width="10" height="440" fill="#1a1008" rx="3"/>
+      <g style="animation:spin1 5.5s linear infinite;transform-origin:0 0">
+        <rect x="-3" y="-145" width="6" height="145" fill="#2a1810" rx="2.5"/>
+        <rect x="-3" y="-145" width="6" height="145" fill="#2a1810" rx="2.5" transform="rotate(120)"/>
+        <rect x="-3" y="-145" width="6" height="145" fill="#2a1810" rx="2.5" transform="rotate(240)"/>
+      </g>
+      <circle cx="0" cy="0" r="7" fill="#1a1008"/>
+      <rect x="-2.5" y="440" width="5" height="80" fill="rgba(30,20,10,.3)" style="filter:blur(2px)"/>
+    </g>
+
+    <!-- Turbine 5 center-right large -->
+    <g transform="translate(1250,280)">
+      <rect x="-4" y="0" width="8" height="400" fill="#1a1008" rx="3"/>
+      <g style="animation:spin2 6.5s linear infinite;transform-origin:0 0">
+        <rect x="-2.5" y="-125" width="5" height="125" fill="#2a1810" rx="2"/>
+        <rect x="-2.5" y="-125" width="5" height="125" fill="#2a1810" rx="2" transform="rotate(120)"/>
+        <rect x="-2.5" y="-125" width="5" height="125" fill="#2a1810" rx="2" transform="rotate(240)"/>
+      </g>
+      <circle cx="0" cy="0" r="6" fill="#1a1008"/>
+      <rect x="-2" y="400" width="4" height="65" fill="rgba(30,20,10,.25)" style="filter:blur(2px)"/>
+    </g>
+
+    <!-- Turbine 6 right medium -->
+    <g transform="translate(1500,330)">
+      <rect x="-3" y="0" width="6" height="350" fill="#1a1008" rx="2"/>
+      <g style="animation:spin3 7.5s linear infinite;transform-origin:0 0">
+        <rect x="-2" y="-95" width="4" height="95" fill="#2a1810" rx="2"/>
+        <rect x="-2" y="-95" width="4" height="95" fill="#2a1810" rx="2" transform="rotate(120)"/>
+        <rect x="-2" y="-95" width="4" height="95" fill="#2a1810" rx="2" transform="rotate(240)"/>
+      </g>
+      <circle cx="0" cy="0" r="5" fill="#1a1008"/>
+      <rect x="-1.5" y="350" width="3" height="55" fill="rgba(30,20,10,.2)" style="filter:blur(1px)"/>
+    </g>
+
+    <!-- Turbine 7 far right small -->
+    <g transform="translate(1720,370)">
+      <rect x="-2.5" y="0" width="5" height="310" fill="#1a1008" rx="2"/>
+      <g style="animation:spin1 9s linear infinite;transform-origin:0 0">
+        <rect x="-1.5" y="-75" width="3" height="75" fill="#2a1810" rx="1.5"/>
+        <rect x="-1.5" y="-75" width="3" height="75" fill="#2a1810" rx="1.5" transform="rotate(120)"/>
+        <rect x="-1.5" y="-75" width="3" height="75" fill="#2a1810" rx="1.5" transform="rotate(240)"/>
+      </g>
+      <circle cx="0" cy="0" r="4" fill="#1a1008"/>
+      <rect x="-1" y="310" width="2" height="45" fill="rgba(30,20,10,.15)" style="filter:blur(1px)"/>
+    </g>
+
+    <!-- Turbine 8 far far right tiny -->
+    <g transform="translate(1850,400)">
+      <rect x="-2" y="0" width="4" height="280" fill="#1a1008" rx="1.5"/>
+      <g style="animation:spin2 10s linear infinite;transform-origin:0 0">
+        <rect x="-1" y="-60" width="2" height="60" fill="#2a1810" rx="1"/>
+        <rect x="-1" y="-60" width="2" height="60" fill="#2a1810" rx="1" transform="rotate(120)"/>
+        <rect x="-1" y="-60" width="2" height="60" fill="#2a1810" rx="1" transform="rotate(240)"/>
+      </g>
+      <circle cx="0" cy="0" r="3" fill="#1a1008"/>
+    </g>
+  </svg>
+</div>
+<div id="app"></div>
+<script>
+
+/* === SUPABASE CLOUD SYNC === */
+const SUPABASE_URL="https://yesqnelqbziomokfdfop.supabase.co";
+const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inllc3FuZWxxYnppb21va2ZkZm9wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MTU0MTIsImV4cCI6MjA4ODI5MTQxMn0.duRuExPbZdbQI-OnumUro0W52hUTpqZ-dw26b0ZlhQU";
+let supaClient=null;
+let syncStatus="idle";
+let lastSync=null;
+
+function initSupabase(){
+  try{
+    if(typeof supabase!=="undefined"){const sc=supabase.createClient||supabase.default?.createClient;if(sc){
+      supaClient=sc(SUPABASE_URL,SUPABASE_KEY);
+      console.log("Supabase connected");
+      return true;
+    }}
+  }catch(e){console.error("Supabase init error:",e)}
+  return false;
+}
+
+async function cloudSave(){
+  if(!supaClient){if(!initSupabase())return false}
+  syncStatus="saving";renderSyncBadge();
+  try{
+    const{error}=await supaClient.from("app_data").update({
+      turbines:db.turbines,
+      spare:db.spare,
+      parks:db.parks||[],
+      cats:CATS,
+      updated_at:new Date().toISOString()
+    }).eq("id","main");
+    if(error)throw error;
+    syncStatus="saved";lastSync=new Date();
+    renderSyncBadge();
+    setTimeout(()=>{syncStatus="idle";renderSyncBadge()},2000);
+    return true;
+  }catch(e){
+    console.error("Cloud save error:",e);
+    syncStatus="error";renderSyncBadge();
+    return false;
+  }
+}
+
+async function cloudLoad(){
+  if(!supaClient){if(!initSupabase())return false}
+  syncStatus="loading";renderSyncBadge();
+  try{
+    const{data,error}=await supaClient.from("app_data").select("*").eq("id","main").single();
+    if(error)throw error;
+    if(data && data.turbines && data.turbines.length>0){
+      db.turbines=data.turbines;
+      db.spare=data.spare||[];
+      db.parks=data.parks||[];
+      if(data.cats&&data.cats.length>0){CATS.length=0;data.cats.forEach(c=>CATS.push(c));saveCats()}
+      db.turbines.forEach(t=>t.components.forEach(c=>{if(!c.imgs)c.imgs=[]}));
+      db.spare.forEach(p=>{if(!p.imgs)p.imgs=[]});
+      save();
+      syncStatus="loaded";lastSync=new Date();
+      renderSyncBadge();
+      render();
+      setTimeout(()=>{syncStatus="idle";renderSyncBadge()},2000);
+      return true;
+    } else {
+      // Cloud is empty, push local data up
+      await cloudSave();
+      return true;
+    }
+  }catch(e){
+    console.error("Cloud load error:",e);
+    syncStatus="error";renderSyncBadge();
+    return false;
+  }
+}
+
+function renderSyncBadge(){
+  const el=document.getElementById("sync-badge");
+  if(!el)return;
+  const icons={idle:"☁",saving:"⬆",saved:"✓",loading:"⬇",loaded:"✓",error:"✗"};
+  const colors={idle:"var(--tx4)",saving:"var(--ylw)",saved:"var(--grn)",loading:"var(--blu)",loaded:"var(--grn)",error:"var(--red)"};
+  const labels={idle:"Cloud",saving:"Salvare...",saved:"Salvat!",loading:"Încărcare...",loaded:"Încărcat!",error:"Eroare"};
+  el.innerHTML=`<span style="color:${colors[syncStatus]};font-size:10px">${icons[syncStatus]} ${labels[syncStatus]}</span>`;
+}
+
+// Override save() to also sync to cloud
+const _origSave=save;
+function save(){
+  _origSave();
+  // Debounce cloud save - wait 1 second after last change
+  clearTimeout(save._timer);
+  save._timer=setTimeout(()=>cloudSave(),1000);
+}
+
+// Load from cloud on startup
+setTimeout(()=>{
+  if(initSupabase()){
+    cloudLoad().then(ok=>{
+      if(ok){console.log('Cloud data loaded');}
+      else console.log("Using local data");
+    });
+  }
+},500);
+
+const SEED={"turbines": [{"id": "wtg1", "name": "WTG1 Blue2", "sn": "91929-01", "type": "MM92/100", "parkId": "p2", "components": [{"d": "base box", "m": "SSB", "md": "", "ct": "35064", "ctd": "Base box cpl., MD/MM", "cat": "Altele"}, {"d": "bearing housing", "m": "H&H", "md": "Z-2.9-TS.RL.01-A (C)", "ct": "26524", "ctd": "Rotor bearing housing,compl., MM92/MM100", "cat": "Nacel\u0103 & Structur\u0103"}, {"d": "blade bearing (\u00d73)", "m": "Laulagun", "md": "n. l. / n. r. / illi", "ct": "22597", "ctd": "Blade bearing, MM92", "cat": "Rotor & Pale"}, {"d": "blade box converter (\u00d73)", "m": "SSB", "md": "", "ct": "29631", "ctd": "Pitch, basis, SSB, MM92/100", "cat": "Rotor & Pale"}, {"d": "blade pitch gearbox (\u00d73)", "m": "Bonfiglioli", "md": "2T706T3131A06", "ct": "37707", "ctd": "Gearbox, Pitch, MM, NCV/CCV", "cat": "Rotor & Pale"}, {"d": "busbar rotor", "m": "Siemens", "md": "LDA 1303", "ct": "", "ctd": "", "cat": "Generator"}, {"d": "busbar stator", "m": "Siemens", "md": "LDA 4303", "ct": "", "ctd": "", "cat": "Generator"}, {"d": "chain hoist", "m": "Liftket", "md": "051/95 250/1-18/4,5", "ct": "24503", "ctd": "Lifting device, till NH100m, MD/MM", "cat": "Altele"}, {"d": "charger", "m": "SSB", "md": "M5000-12", "ct": "29631", "ctd": "Pitch, basis, SSB, MM92/100", "cat": "Sistem Pitch"}, {"d": "clamping set", "m": "Tollok", "md": "TLK681 660 Y1300", "ct": "38284", "ctd": "Shrink disc rotor shaft MM92/MM100", "cat": "Cutie de Viteze"}, {"d": "CMS - oil", "m": "GasTops", "md": "3110 Rev. B", "ct": "33034", "ctd": "Oil particle sensor, Gastops 3110, CMS", "cat": "Cutie de Viteze"}, {"d": "converter", "m": "efacec", "md": "CW2000RP8.4", "ct": "39857", "ctd": "Converter Portugal, efacec, CW2000RP8.4", "cat": "Sistem Electric"}, {"d": "coupling", "m": "Winergy / ATEC", "md": "ARC06 KRZN 410-6e.on", "ct": "34852", "ctd": "Coupling incl. brake disc ,50Hz, MM", "cat": "Cutie de Viteze"}, {"d": "foundation mounting part", "m": "Leucci", "md": "", "ct": "24059", "ctd": "FIP, MM92,IEC3a/WZ2,100m", "cat": "Turn & Funda\u021bie"}, {"d": "gear oil cooler", "m": "Nissens", "md": "202471", "ct": "37424", "ctd": "Gearbox, Moventas, PLH-1900.1-MM92", "cat": "Cutie de Viteze"}, {"d": "gear oil pump (electrical)", "m": "Rickmeier", "md": "R35/50 FL-Z-S0", "ct": "37424", "ctd": "Gearbox, Moventas, PLH-1900.1-MM92", "cat": "Cutie de Viteze"}, {"d": "gear oil pump (mechanical)", "m": "Rickmeier", "md": "R4.5/54FLZSAE2UNIS0", "ct": "37424", "ctd": "Gearbox, Moventas, PLH-1900.1-MM92", "cat": "Cutie de Viteze"}, {"d": "gearbox", "m": "Moventas", "md": "PLH 1900MM92", "ct": "37424", "ctd": "Gearbox, Moventas, PLH-1900.1-MM92", "cat": "Cutie de Viteze"}, {"d": "generator", "m": "efacec", "md": "DASAA5025-4UA", "ct": "34417", "ctd": "GeneratorEFACEC,DASAA,5025-4UA,MM(48073)", "cat": "Generator"}, {"d": "hyd. unit yaw/rot. hold. brake", "m": "HAWE", "md": "A08024S00", "ct": "33405", "ctd": "Hydraulic unit, 160 bar, 50Hz, MM", "cat": "Sistem Yaw"}, {"d": "ladder climb. supp./elev. sys.", "m": "Power Climber", "md": "SHERPA-SD3R", "ct": "27077", "ctd": "Service lift PC Sherpa-SD3 690V", "cat": "Turn & Funda\u021bie"}, {"d": "lub. sys. rot. bearing", "m": "Lincoln", "md": "636-36623-2", "ct": "41155", "ctd": "Lubrication unit,Lincoln, rotor bearing", "cat": "Nacel\u0103 & Structur\u0103"}, {"d": "lubrication system rotor hub", "m": "Lincoln", "md": "636-45094-4", "ct": "34954", "ctd": "Central lubrication system pitch, MM", "cat": "Rotor & Pale"}, {"d": "main box", "m": "SSB", "md": "", "ct": "29631", "ctd": "Pitch, basis, SSB, MM92/100", "cat": "Altele"}, {"d": "main frame", "m": "EXCON", "md": "", "ct": "22728", "ctd": "Pre-fabrication bed plate, MM92", "cat": "Nacel\u0103 & Structur\u0103"}, {"d": "medium voltage switchgear", "m": "EATON", "md": "XIRIA", "ct": "51176", "ctd": "Switchgear_24kV_0630A_20/1_3TKK0I_000_MM", "cat": "Sistem Electric"}, {"d": "MM92/100", "m": "Ventipower", "md": "MM92/100", "ct": "", "ctd": "", "cat": "Altele"}, {"d": "3", "m": "Corunesa", "md": "", "ct": "42665", "ctd": "Cabin, MD/MM 50Hz, LPL-1", "cat": "Altele"}, {"d": "obstacle light", "m": "Reetec", "md": "RE-LED865/864", "ct": "39945", "ctd": "Aviation lights standard MM", "cat": "Sistem de Control"}, {"d": "obstacle light control box", "m": "Reetec", "md": "RE-LED86x", "ct": "39945", "ctd": "Aviation lights standard MM", "cat": "Sistem de Control"}, {"d": "oil filtering system", "m": "Internormen", "md": "TWF1950", "ct": "37424", "ctd": "Gearbox, Moventas, PLH-1900.1-MM92", "cat": "Cutie de Viteze"}, {"d": "osc. sensors drive train", "m": "PCH", "md": "CHB 1102", "ct": "45661", "ctd": "Sensor,ext.vibration,PCH1026/CHB1102+CHL", "cat": "Sistem de Control"}, {"d": "oscillation sensors tower", "m": "PCH", "md": "CHF 8728", "ct": "45659", "ctd": "Sensor, vibration m.,PCH1026/CHF8728,MK2", "cat": "Turn & Funda\u021bie"}, {"d": "pitch hub controller", "m": "L+B", "md": "GEL8230", "ct": "29631", "ctd": "Pitch, basis, SSB, MM92/100", "cat": "Rotor & Pale"}, {"d": "pitch motor (\u00d73)", "m": "SSB", "md": "GXHIF-0730.29918.81", "ct": "29631", "ctd": "Pitch, basis, SSB, MM92/100", "cat": "Sistem Pitch"}, {"d": "pitch system-COMP", "m": "SSB", "md": "", "ct": "29631", "ctd": "Pitch, basis, SSB, MM92/100", "cat": "Sistem Pitch"}, {"d": "rechargeable battery box (\u00d73)", "m": "SSB", "md": "", "ct": "29631", "ctd": "Pitch, basis, SSB, MM92/100", "cat": "Altele"}, {"d": "rotor bearing", "m": "FAG", "md": "240/710-B-MB", "ct": "26521", "ctd": "spherical bearing, 240/710", "cat": "Nacel\u0103 & Structur\u0103"}, {"d": "rotor blade (\u00d73)", "m": "LM", "md": "45.3 P EVO 2", "ct": "54606", "ctd": "Rotor blade LM45.3 P, 000, Evo-2", "cat": "Rotor & Pale"}, {"d": "rotor blade set", "m": "LM", "md": "45.3 P EVO 2", "ct": "", "ctd": "", "cat": "Rotor & Pale"}, {"d": "rotor brake caliper", "m": "Svendborg", "md": "BSAK3000-MS30S-102", "ct": "21554", "ctd": "Brake calliper act,rotor-,BSAK3000-MS30S", "cat": "Fr\u00e2nare"}, {"d": "rotor hub", "m": "EGT", "md": "", "ct": "19656", "ctd": "Hub, MM82/92", "cat": "Rotor & Pale"}, {"d": "rotor hub-COMP", "m": "Ventipower", "md": "", "ct": "", "ctd": "", "cat": "Rotor & Pale"}, {"d": "rotor locking disk", "m": "Famet", "md": "MM92", "ct": "22514", "ctd": "Rotor lock disk, MM92", "cat": "Fr\u00e2nare"}, {"d": "rotor shaft", "m": "AH industries Components A/S", "md": "", "ct": "22507", "ctd": "Rotor shaft, MM92/MM100", "cat": "Nacel\u0103 & Structur\u0103"}, {"d": "slip ring unit", "m": "Mersen (Dietrich)", "md": "USDK234", "ct": "22617", "ctd": "Slip ring unit, MM/3.XM MER", "cat": "Generator"}, {"d": "spinner", "m": "Corunesa", "md": "", "ct": "19793", "ctd": "Spinner, MM82B/92", "cat": "Rotor & Pale"}, {"d": "stator connection cabinet", "m": "Siemens", "md": "LDA 4303", "ct": "", "ctd": "", "cat": "Sistem Electric"}, {"d": "top box", "m": "SSB", "md": "", "ct": "35059", "ctd": "Top box cpl., MD/MM", "cat": "Altele"}, {"d": "tower", "m": "Leucci", "md": "MM92/100 IEC3a/WZ2", "ct": "27298", "ctd": "Tubular tower MM92,IEC3a/WZ2,100m", "cat": "Turn & Funda\u021bie"}, {"d": "transformer - intern", "m": "SGB", "md": "DTTHG 2500/20", "ct": "28920", "ctd": "Trafo_2500kVA_50Hz_20,00kV_S_2_AF___0_MM", "cat": "Sistem Electric"}, {"d": "UPS", "m": "Jovyatlas", "md": "JTP1500-0-SEG", "ct": "", "ctd": "", "cat": "Sistem Electric"}, {"d": "wind turbine control computer", "m": "Bachmann", "md": "MPC 293", "ct": "34356", "ctd": "Modul, Prozessor-, MPC293-128/512MB CF", "cat": "Sistem de Control"}, {"d": "yaw adjustment-COMP", "m": "", "md": "", "ct": "", "ctd": "", "cat": "Sistem Yaw"}, {"d": "yaw bearing", "m": "Laulagun", "md": "F3002M18DTTE125HX", "ct": "22734", "ctd": "Yaw bearing,  MM92", "cat": "Sistem Yaw"}, {"d": "yaw brake (\u00d710)", "m": "Svendborg", "md": "BSAB 90-S-500", "ct": "30687", "ctd": "Calliper, yaw brake-,BSAB90-S-500", "cat": "Sistem Yaw"}, {"d": "yaw brake disk", "m": "Famet", "md": "MM92", "ct": "10610", "ctd": "Brake Disc, yaw, MD/MM", "cat": "Sistem Yaw"}, {"d": "yaw gearbox (\u00d74)", "m": "Liebherr", "md": "DAT 400/1435", "ct": "37708", "ctd": "Drive, Yaw, MM, 50Hz, NCV/CCV", "cat": "Sistem Yaw"}, {"d": "yaw motor (\u00d74)", "m": "ATB", "md": "BAF 112M / 6K-11", "ct": "37708", "ctd": "Drive, Yaw, MM, 50Hz, NCV/CCV", "cat": "Sistem Yaw"}]}, {"id": "wtg2", "name": "WTG2 Blue2", "sn": "91812-02", "type": "MM92/100", "parkId": "p2", "components": [{"d": "base box", "m": "SSB", "md": "", "ct": "35064", "ctd": "Base box cpl., MD/MM", "cat": "Altele"}, {"d": "bearing housing", "m": "H&H", "md": "Z-2.9-TS.RL.01-A", "ct": "26524", "ctd": "Rotor bearing housing,compl., MM92/MM100", "cat": "Nacel\u0103 & Structur\u0103"}, {"d": "blade bearing (\u00d73)", "m": "HRE (Rothe Erde)", "md": "091452010012481411", "ct": "22597", "ctd": "Blade bearing, MM92", "cat": "Rotor & Pale"}, {"d": "blade box converter (\u00d73)", "m": "SSB", "md": "", "ct": "29631", "ctd": "Pitch, basis, SSB, MM92/100", "cat": "Rotor & Pale"}, {"d": "blade pitch gearbox (\u00d73)", "m": "Bonfiglioli", "md": "2T706T3131A06", "ct": "37707", "ctd": "Gearbox, Pitch, MM, NCV/CCV", "cat": "Rotor & Pale"}, {"d": "busbar rotor", "m": "Siemens", "md": "LDA 1303", "ct": "", "ctd": "", "cat": "Generator"}, {"d": "busbar stator", "m": "Siemens", "md": "LDA 4303", "ct": "", "ctd": "", "cat": "Generator"}, {"d": "chain hoist", "m": "Liftket", "md": "051/95 250/1-18/4,5", "ct": "24503", "ctd": "Lifting device, till NH100m, MD/MM", "cat": "Altele"}, {"d": "charger", "m": "SSB", "md": "M5000-12", "ct": "29631", "ctd": "Pitch, basis, SSB, MM92/100", "cat": "Sistem Pitch"}, {"d": "clamping set", "m": "Tollok", "md": "TLK681 660 Y1300", "ct": "38284", "ctd": "Shrink disc rotor shaft MM92/MM100", "cat": "Cutie de Viteze"}, {"d": "CMS - oil", "m": "GasTops", "md": "3110 Rev. B", "ct": "33034", "ctd": "Oil particle sensor, Gastops 3110, CMS", "cat": "Cutie de Viteze"}, {"d": "converter", "m": "efacec", "md": "CW2000RP8.4", "ct": "39857", "ctd": "Converter Portugal, efacec, CW2000RP8.4", "cat": "Sistem Electric"}, {"d": "coupling", "m": "Winergy / ATEC", "md": "ARC06 KRZN 410-6e.on", "ct": "34852", "ctd": "Coupling incl. brake disc ,50Hz, MM", "cat": "Cutie de Viteze"}, {"d": "foundation mounting part", "m": "Leucci", "md": "", "ct": "24059", "ctd": "FIP, MM92,IEC3a/WZ2,100m", "cat": "Turn & Funda\u021bie"}, {"d": "gear oil cooler", "m": "Nissens", "md": "202471", "ct": "37424", "ctd": "Gearbox, Moventas, PLH-1900.1-MM92", "cat": "Cutie de Viteze"}, {"d": "gear oil pump (electrical)", "m": "Rickmeier", "md": "R35/50 FL-Z-S0", "ct": "37424", "ctd": "Gearbox, Moventas, PLH-1900.1-MM92", "cat": "Cutie de Viteze"}, {"d": "gear oil pump (mechanical)", "m": "Rickmeier", "md": "R4.5/54FLZSAE2UNIS0", "ct": "37424", "ctd": "Gearbox, Moventas, PLH-1900.1-MM92", "cat": "Cutie de Viteze"}, {"d": "gearbox", "m": "hansen", "md": "", "ct": "", "ctd": "", "cat": "Cutie de Viteze"}, {"d": "generator", "m": "efacec", "md": "DASAA5025-4UA", "ct": "34417", "ctd": "GeneratorEFACEC,DASAA,5025-4UA,MM(48073)", "cat": "Generator"}, {"d": "hyd. unit yaw/rot. hold. brake", "m": "HAWE", "md": "A08024S00", "ct": "33405", "ctd": "Hydraulic unit, 160 bar, 50Hz, MM", "cat": "Sistem Yaw"}, {"d": "ladder climb. supp./elev. sys.", "m": "Power Climber", "md": "SHERPA-SD3R", "ct": "27077", "ctd": "Service lift PC Sherpa-SD3 690V", "cat": "Turn & Funda\u021bie"}, {"d": "lub. sys. rot. bearing", "m": "Lincoln", "md": "636-36623-2", "ct": "15519", "ctd": "Lubrication unit,rotor bearing,MD/MM", "cat": "Nacel\u0103 & Structur\u0103"}, {"d": "lubrication system rotor hub", "m": "Lincoln", "md": "636-45094-4", "ct": "34954", "ctd": "Central lubrication system pitch, MM", "cat": "Rotor & Pale"}, {"d": "main box", "m": "SSB", "md": "", "ct": "29631", "ctd": "Pitch, basis, SSB, MM92/100", "cat": "Altele"}, {"d": "main frame", "m": "EXCON", "md": "", "ct": "22728", "ctd": "Pre-fabrication bed plate, MM92", "cat": "Nacel\u0103 & Structur\u0103"}, {"d": "medium voltage switchgear", "m": "EATON", "md": "XIRIA", "ct": "51176", "ctd": "Switchgear_24kV_0630A_20/1_3TKK0I_000_MM", "cat": "Sistem Electric"}, {"d": "MM92/100", "m": "Ventipower", "md": "MM92/100", "ct": "", "ctd": "", "cat": "Altele"}, {"d": "nacelle enclosure", "m": "Corunesa", "md": "", "ct": "42665", "ctd": "Cabin, MD/MM 50Hz, LPL-1", "cat": "Nacel\u0103 & Structur\u0103"}, {"d": "obstacle light", "m": "Reetec", "md": "RE-LED865/864", "ct": "39945", "ctd": "Aviation lights standard MM", "cat": "Sistem de Control"}, {"d": "obstacle light control box", "m": "Reetec", "md": "RE-LED86x", "ct": "39945", "ctd": "Aviation lights standard MM", "cat": "Sistem de Control"}, {"d": "oil filtering system", "m": "Internormen", "md": "TWF1950", "ct": "37424", "ctd": "Gearbox, Moventas, PLH-1900.1-MM92", "cat": "Cutie de Viteze"}, {"d": "osc. sensors drive train", "m": "PCH", "md": "CHB 1102", "ct": "45661", "ctd": "Sensor,ext.vibration,PCH1026/CHB1102+CHL", "cat": "Sistem de Control"}, {"d": "oscillation sensors tower", "m": "PCH", "md": "CHF 8728", "ct": "45659", "ctd": "Sensor, vibration m.,PCH1026/CHF8728,MK2", "cat": "Turn & Funda\u021bie"}, {"d": "pitch hub controller", "m": "L+B", "md": "GEL8230", "ct": "29631", "ctd": "Pitch, basis, SSB, MM92/100", "cat": "Rotor & Pale"}, {"d": "pitch motor (\u00d73)", "m": "SSB", "md": "GXHIF-0730.29918.81", "ct": "29631", "ctd": "Pitch, basis, SSB, MM92/100", "cat": "Sistem Pitch"}, {"d": "pitch system-COMP", "m": "SSB", "md": "", "ct": "29631", "ctd": "Pitch, basis, SSB, MM92/100", "cat": "Sistem Pitch"}, {"d": "rechargeable battery box (\u00d73)", "m": "SSB", "md": "", "ct": "29631", "ctd": "Pitch, basis, SSB, MM92/100", "cat": "Altele"}, {"d": "rotor bearing", "m": "FAG", "md": "240/710-B-MB", "ct": "26521", "ctd": "spherical bearing, 240/710", "cat": "Nacel\u0103 & Structur\u0103"}, {"d": "rotor blade (\u00d73)", "m": "LM", "md": "45.3 P EVO 2", "ct": "54606", "ctd": "Rotor blade LM45.3 P, 000, Evo-2", "cat": "Rotor & Pale"}, {"d": "rotor blade set", "m": "LM", "md": "45.3 P EVO 2", "ct": "", "ctd": "", "cat": "Rotor & Pale"}, {"d": "rotor brake caliper", "m": "Svendborg", "md": "BSAK3000-MS30S-102", "ct": "21554", "ctd": "Brake calliper act,rotor-,BSAK3000-MS30S", "cat": "Fr\u00e2nare"}, {"d": "rotor hub", "m": "EGT", "md": "", "ct": "19656", "ctd": "Hub, MM82/92", "cat": "Rotor & Pale"}, {"d": "rotor hub-COMP", "m": "Ventipower", "md": "", "ct": "", "ctd": "", "cat": "Rotor & Pale"}, {"d": "rotor locking disk", "m": "Famet", "md": "MM92", "ct": "22514", "ctd": "Rotor lock disk, MM92", "cat": "Fr\u00e2nare"}, {"d": "rotor shaft", "m": "AH industries Components A/S", "md": "", "ct": "22507", "ctd": "Rotor shaft, MM92/MM100", "cat": "Nacel\u0103 & Structur\u0103"}, {"d": "slip ring unit", "m": "Mersen (Dietrich)", "md": "USDK234", "ct": "22617", "ctd": "Slip ring unit, MM/3.XM MER", "cat": "Generator"}, {"d": "spinner", "m": "Corunesa", "md": "", "ct": "19793", "ctd": "Spinner, MM82B/92", "cat": "Rotor & Pale"}, {"d": "stator connection cabinet", "m": "Siemens", "md": "n. l. / n. r. / illi", "ct": "", "ctd": "", "cat": "Sistem Electric"}, {"d": "top box", "m": "SSB", "md": "", "ct": "35059", "ctd": "Top box cpl., MD/MM", "cat": "Altele"}, {"d": "tower", "m": "Leucci", "md": "MM92/100 IEC3a/WZ2", "ct": "27298", "ctd": "Tubular tower MM92,IEC3a/WZ2,100m", "cat": "Turn & Funda\u021bie"}, {"d": "transformer - intern", "m": "SGB", "md": "DTTHG 2500/20", "ct": "28920", "ctd": "Trafo_2500kVA_50Hz_20,00kV_S_2_AF___0_MM", "cat": "Sistem Electric"}, {"d": "UPS", "m": "Jovyatlas", "md": "JTP1500-0-SEG", "ct": "", "ctd": "", "cat": "Sistem Electric"}, {"d": "wind turbine control computer", "m": "Bachmann", "md": "MPC 293", "ct": "34356", "ctd": "Modul, Prozessor-, MPC293-128/512MB CF", "cat": "Sistem de Control"}, {"d": "yaw adjustment-COMP", "m": "", "md": "", "ct": "", "ctd": "", "cat": "Sistem Yaw"}, {"d": "yaw bearing", "m": "HRE (Rothe Erde)", "md": "091352764010441512", "ct": "22734", "ctd": "Yaw bearing,  MM92", "cat": "Sistem Yaw"}, {"d": "yaw brake (\u00d710)", "m": "Svendborg", "md": "BSAB 90-S-500", "ct": "30687", "ctd": "Calliper, yaw brake-,BSAB90-S-500", "cat": "Sistem Yaw"}, {"d": "yaw brake disk", "m": "Famet", "md": "MM92", "ct": "10610", "ctd": "Brake Disc, yaw, MD/MM", "cat": "Sistem Yaw"}, {"d": "yaw gearbox (\u00d74)", "m": "Liebherr", "md": "DAT 400/1435", "ct": "37708", "ctd": "Drive, Yaw, MM, 50Hz, NCV/CCV", "cat": "Sistem Yaw"}, {"d": "yaw motor (\u00d74)", "m": "ATB", "md": "BAF 112M / 6K-11", "ct": "37708", "ctd": "Drive, Yaw, MM, 50Hz, NCV/CCV", "cat": "Sistem Yaw"}]}, {"id": "wtg3", "name": "WTG3 Blue2", "sn": "92692-03", "type": "MM92/100", "parkId": "p2", "components": [{"d": "base box", "m": "SSB", "md": "", "ct": "35064", "ctd": "Base box cpl., MD/MM", "cat": "Altele"}, {"d": "bearing housing", "m": "NTN", "md": "SBox879", "ct": "26524", "ctd": "Rotor bearing housing,compl., MM92/MM100", "cat": "Nacel\u0103 & Structur\u0103"}, {"d": "blade bearing (\u00d73)", "m": "HRE (Rothe Erde)", "md": "091452010012481411", "ct": "22597", "ctd": "Blade bearing, MM92", "cat": "Rotor & Pale"}, {"d": "blade box converter (\u00d73)", "m": "SSB", "md": "", "ct": "29631", "ctd": "Pitch, basis, SSB, MM92/100", "cat": "Rotor & Pale"}, {"d": "blade pitch gearbox (\u00d73)", "m": "Bonfiglioli", "md": "2T706T3131A06", "ct": "37707", "ctd": "Gearbox, Pitch, MM, NCV/CCV", "cat": "Rotor & Pale"}, {"d": "busbar rotor", "m": "Siemens", "md": "LDA 1303", "ct": "", "ctd": "", "cat": "Generator"}, {"d": "busbar stator", "m": "Siemens", "md": "LDA 4303", "ct": "", "ctd": "", "cat": "Generator"}, {"d": "chain hoist", "m": "Demag", "md": "DC-WIND5-250 1/1H110", "ct": "24503", "ctd": "Lifting device, till NH100m, MD/MM", "cat": "Altele"}, {"d": "charger", "m": "SSB", "md": "M5000-12", "ct": "29631", "ctd": "Pitch, basis, SSB, MM92/100", "cat": "Sistem Pitch"}, {"d": "clamping set", "m": "Tollok", "md": "TLK681 660 Y1300", "ct": "38284", "ctd": "Shrink disc rotor shaft MM92/MM100", "cat": "Cutie de Viteze"}, {"d": "CMS - oil", "m": "GasTops", "md": "3110 Rev. B", "ct": "33034", "ctd": "Oil particle sensor, Gastops 3110, CMS", "cat": "Cutie de Viteze"}, {"d": "converter", "m": "SEG", "md": "CW2000RP8.4", "ct": "39659", "ctd": "Converter, WW SEG, CW2000RP8.4_V1, MM", "cat": "Sistem Electric"}, {"d": "coupling", "m": "Winergy / ATEC", "md": "ARC06 KRZN 410-6e.on", "ct": "34852", "ctd": "Coupling incl. brake disc ,50Hz, MM", "cat": "Cutie de Viteze"}, {"d": "foundation mounting part", "m": "Leucci", "md": "", "ct": "24059", "ctd": "FIP, MM92,IEC3a/WZ2,100m", "cat": "Turn & Funda\u021bie"}, {"d": "gear oil cooler", "m": "Nissens", "md": "202471", "ct": "37424", "ctd": "Gearbox, Moventas, PLH-1900.1-MM92", "cat": "Cutie de Viteze"}, {"d": "gear oil pump (electrical)", "m": "Rickmeier", "md": "R35/50 FL-Z-S0", "ct": "37424", "ctd": "Gearbox, Moventas, PLH-1900.1-MM92", "cat": "Cutie de Viteze"}, {"d": "gear oil pump (mechanical)", "m": "Rickmeier", "md": "R4.5/54FLZSAE2UNIS0", "ct": "37424", "ctd": "Gearbox, Moventas, PLH-1900.1-MM92", "cat": "Cutie de Viteze"}, {"d": "gearbox", "m": "Moventas", "md": "PLH 1900MM92", "ct": "37424", "ctd": "Gearbox, Moventas, PLH-1900.1-MM92", "cat": "Cutie de Viteze"}, {"d": "generator", "m": "Loher (Winergy)", "md": "JFEB-500SS-04A", "ct": "29277", "ctd": "Generator, Winergy JFEB-500SS-04A, MM", "cat": "Generator"}, {"d": "hyd. unit yaw/rot. hold. brake", "m": "HAWE", "md": "A08024S00", "ct": "33405", "ctd": "Hydraulic unit, 160 bar, 50Hz, MM", "cat": "Sistem Yaw"}, {"d": "ladder climb. supp./elev. sys.", "m": "Power Climber", "md": "SHERPA-SD3R", "ct": "27077", "ctd": "Service lift PC Sherpa-SD3 690V", "cat": "Turn & Funda\u021bie"}, {"d": "lub. sys. rot. bearing", "m": "Lincoln", "md": "636-36623-2", "ct": "41155", "ctd": "Lubrication unit,Lincoln, rotor bearing", "cat": "Nacel\u0103 & Structur\u0103"}, {"d": "lubrication system rotor hub", "m": "Lincoln", "md": "636-45094-4", "ct": "34954", "ctd": "Central lubrication system pitch, MM", "cat": "Rotor & Pale"}, {"d": "main box", "m": "SSB", "md": "", "ct": "29631", "ctd": "Pitch, basis, SSB, MM92/100", "cat": "Altele"}, {"d": "main frame", "m": "EXCON", "md": "", "ct": "22728", "ctd": "Pre-fabrication bed plate, MM92", "cat": "Nacel\u0103 & Structur\u0103"}, {"d": "medium voltage switchgear", "m": "EATON", "md": "XIRIA", "ct": "51176", "ctd": "Switchgear_24kV_0630A_20/1_3TKK0I_000_MM", "cat": "Sistem Electric"}, {"d": "MM92/100", "m": "Ventipower", "md": "MM92/100", "ct": "", "ctd": "", "cat": "Altele"}, {"d": "nacelle enclosure", "m": "Fassmer", "md": "", "ct": "42665", "ctd": "Cabin, MD/MM 50Hz, LPL-1", "cat": "Nacel\u0103 & Structur\u0103"}, {"d": "obstacle light", "m": "Reetec", "md": "RE-LED865/864", "ct": "39945", "ctd": "Aviation lights standard MM", "cat": "Sistem de Control"}, {"d": "obstacle light control box", "m": "Reetec", "md": "RE-LED86x", "ct": "39945", "ctd": "Aviation lights standard MM", "cat": "Sistem de Control"}, {"d": "oil filtering system", "m": "Internormen", "md": "TWF1950", "ct": "37424", "ctd": "Gearbox, Moventas, PLH-1900.1-MM92", "cat": "Cutie de Viteze"}, {"d": "osc. sensors drive train", "m": "PCH", "md": "CHB 1102", "ct": "45661", "ctd": "Sensor,ext.vibration,PCH1026/CHB1102+CHL", "cat": "Sistem de Control"}, {"d": "oscillation sensors tower", "m": "PCH", "md": "CHF 8728", "ct": "45659", "ctd": "Sensor, vibration m.,PCH1026/CHF8728,MK2", "cat": "Turn & Funda\u021bie"}, {"d": "pitch hub controller", "m": "L+B", "md": "GEL8231Y013B", "ct": "48407", "ctd": "Controller GEL 8231 V2 MOOG", "cat": "Rotor & Pale"}, {"d": "pitch motor (\u00d73)", "m": "SSB", "md": "GXHIF-0730.29918.81", "ct": "29631", "ctd": "Pitch, basis, SSB, MM92/100", "cat": "Sistem Pitch"}, {"d": "pitch system-COMP", "m": "SSB", "md": "", "ct": "29631", "ctd": "Pitch, basis, SSB, MM92/100", "cat": "Sistem Pitch"}, {"d": "rechargeable battery box (\u00d73)", "m": "SSB", "md": "", "ct": "29631", "ctd": "Pitch, basis, SSB, MM92/100", "cat": "Altele"}, {"d": "rotor bearing", "m": "FAG", "md": "240/710-B-MB", "ct": "26521", "ctd": "spherical bearing, 240/710", "cat": "Nacel\u0103 & Structur\u0103"}, {"d": "rotor blade (\u00d73)", "m": "LM", "md": "45.3 P EVO 2", "ct": "54606", "ctd": "Rotor blade LM45.3 P, 000, Evo-2", "cat": "Rotor & Pale"}, {"d": "rotor blade set", "m": "LM", "md": "45.3 P EVO 2", "ct": "", "ctd": "", "cat": "Rotor & Pale"}, {"d": "rotor brake caliper", "m": "Svendborg", "md": "BSAK3000-MS30S-102", "ct": "21554", "ctd": "Brake calliper act,rotor-,BSAK3000-MS30S", "cat": "Fr\u00e2nare"}, {"d": "rotor hub", "m": "EGT", "md": "", "ct": "19656", "ctd": "Hub, MM82/92", "cat": "Rotor & Pale"}, {"d": "rotor hub-COMP", "m": "Ventipower", "md": "", "ct": "", "ctd": "", "cat": "Rotor & Pale"}, {"d": "rotor locking disk", "m": "Nyblad", "md": "", "ct": "22514", "ctd": "Rotor lock disk, MM92", "cat": "Fr\u00e2nare"}, {"d": "rotor shaft", "m": "AH industries Components A/S", "md": "", "ct": "22507", "ctd": "Rotor shaft, MM92/MM100", "cat": "Nacel\u0103 & Structur\u0103"}, {"d": "slip ring unit", "m": "Mersen (Dietrich)", "md": "USDK234", "ct": "22617", "ctd": "Slip ring unit, MM/3.XM MER", "cat": "Generator"}, {"d": "spinner", "m": "Corunesa", "md": "", "ct": "19793", "ctd": "Spinner, MM82B/92", "cat": "Rotor & Pale"}, {"d": "stator connection cabinet", "m": "Siemens", "md": "LDA 4303", "ct": "", "ctd": "", "cat": "Sistem Electric"}, {"d": "top box", "m": "SSB", "md": "", "ct": "35059", "ctd": "Top box cpl., MD/MM", "cat": "Altele"}, {"d": "tower", "m": "Leucci", "md": "MM92/100 IEC3a/WZ2", "ct": "27298", "ctd": "Tubular tower MM92,IEC3a/WZ2,100m", "cat": "Turn & Funda\u021bie"}, {"d": "transformer - intern", "m": "SGB", "md": "DTTHG 2500/20", "ct": "28920", "ctd": "Trafo_2500kVA_50Hz_20,00kV_S_2_AF___0_MM", "cat": "Sistem Electric"}, {"d": "UPS", "m": "Jovyatlas", "md": "JTP1500-0-SEG", "ct": "", "ctd": "", "cat": "Sistem Electric"}, {"d": "wind turbine control computer", "m": "Bachmann", "md": "MPC 293", "ct": "34356", "ctd": "Modul, Prozessor-, MPC293-128/512MB CF", "cat": "Sistem de Control"}, {"d": "yaw adjustment-COMP", "m": "", "md": "", "ct": "", "ctd": "", "cat": "Sistem Yaw"}, {"d": "yaw bearing", "m": "HRE (Rothe Erde)", "md": "091352764011441512", "ct": "34968", "ctd": "Yaw bearing, MM92/MM100", "cat": "Sistem Yaw"}, {"d": "yaw brake (\u00d710)", "m": "Svendborg", "md": "BSAB 90-S-500", "ct": "30687", "ctd": "Calliper, yaw brake-,BSAB90-S-500", "cat": "Sistem Yaw"}, {"d": "yaw brake disk", "m": "Famet", "md": "MM92", "ct": "10610", "ctd": "Brake Disc, yaw, MD/MM", "cat": "Sistem Yaw"}, {"d": "yaw gearbox (\u00d74)", "m": "Bonfiglioli", "md": "MT711T051", "ct": "37708", "ctd": "Drive, Yaw, MM, 50Hz, NCV/CCV", "cat": "Sistem Yaw"}, {"d": "yaw motor (\u00d74)", "m": "Bonfiglioli", "md": "BN112M6FD", "ct": "37708", "ctd": "Drive, Yaw, MM, 50Hz, NCV/CCV", "cat": "Sistem Yaw"}]}, {"id": "wtg4", "name": "Bestepe WTG2", "sn": "93337-02", "type": "MM92/100", "parkId": "p3", "components": [{"d": "base box", "m": "SSB", "md": "", "ct": "46733", "ctd": "Base box cpl., MM 50Hz", "cat": "Altele"}, {"d": "bearing housing", "m": "Jixin", "md": "10000007867", "ct": "26524", "ctd": "Rotor bearing housing,compl., MM92/MM100", "cat": "Nacel\u0103 & Structur\u0103"}, {"d": "blade bearing (\u00d73)", "m": "Liebherr", "md": "KUD298VA805-000", "ct": "35405", "ctd": "Blade bearing, Liebherr, MM92 CCV", "cat": "Rotor & Pale"}, {"d": "blade box converter (\u00d73)", "m": "Moog (Lust)", "md": "", "ct": "27954", "ctd": "Pitch, basis, Moog, MM", "cat": "Rotor & Pale"}, {"d": "blade pitch gearbox (\u00d73)", "m": "Bonfiglioli", "md": "2T706T3131A08", "ct": "37570", "ctd": "Gearbox, Pitch, MM, Bonfiglioli, NCV/CCV", "cat": "Rotor & Pale"}, {"d": "busbar rotor", "m": "Siemens", "md": "LDA 1303", "ct": "", "ctd": "", "cat": "Generator"}, {"d": "busbar stator", "m": "Siemens", "md": "LDA 4303", "ct": "", "ctd": "", "cat": "Generator"}, {"d": "chain hoist", "m": "Liftket", "md": "051/95 250/1-18/4,5", "ct": "53159", "ctd": "Lifting device, till hh100m, 50Hz, MM", "cat": "Altele"}, {"d": "charger", "m": "Moog (Lust)", "md": "E230 G288", "ct": "27954", "ctd": "Pitch, basis, Moog, MM", "cat": "Sistem Pitch"}, {"d": "clamping set", "m": "Stuewe", "md": "HSD-660-81-1", "ct": "47751", "ctd": "Shrink disc MM92 HSD 660-81-1", "cat": "Cutie de Viteze"}, {"d": "CMS - oil", "m": "GasTops", "md": "3110 (EE)", "ct": "47620", "ctd": "Oil particle sensor,Gastops3110(EE), CMS", "cat": "Cutie de Viteze"}, {"d": "converter", "m": "GE Energy", "md": "ProWind IV 2MW", "ct": "60226", "ctd": "Converter, ProWind IV, 2MW, MM", "cat": "Sistem Electric"}, {"d": "coupling", "m": "KTR", "md": "RADEX-N 190 NANA 4", "ct": "34868", "ctd": "Coupling incl. brake disc, KTR, MM50Hz", "cat": "Cutie de Viteze"}, {"d": "fall protection system", "m": "Haca", "md": "", "ct": "27079", "ctd": "Fall protection rail, Haca", "cat": "Turn & Funda\u021bie"}, {"d": "foundation mounting part", "m": "Leucci", "md": "", "ct": "", "ctd": "", "cat": "Turn & Funda\u021bie"}, {"d": "gear oil cooler", "m": "Nissens", "md": "203311", "ct": "", "ctd": "", "cat": "Cutie de Viteze"}, {"d": "gear oil pump (electrical)", "m": "Rickmeier", "md": "R35/50 FL-Z-SO", "ct": "", "ctd": "", "cat": "Cutie de Viteze"}, {"d": "gear oil pump (mechanical)", "m": "Rickmeier", "md": "R4.5/54 FLZSAE2UNISO", "ct": "", "ctd": "", "cat": "Cutie de Viteze"}, {"d": "gearbox", "m": "Eickhoff", "md": "EBN1378A03R00A/59385", "ct": "60983", "ctd": "Gearbox Eickhoff EBN1378 A03, MM92 50Hz", "cat": "Cutie de Viteze"}, {"d": "generator", "m": "Siemens", "md": "JFEB-500SS-04A", "ct": "54455", "ctd": "Generator, Siemens JFEB-500SS-04A, MM", "cat": "Generator"}, {"d": "hyd. unit yaw/rot. hold. brake", "m": "HAWE", "md": "12-127-H-00-01", "ct": "50984", "ctd": "Hydraulic unit, 175bar, 50Hz, Harting,MM", "cat": "Sistem Yaw"}, {"d": "ladder climb. supp./elev. sys.", "m": "Power Climber", "md": "SHERPA-SD4", "ct": "58604", "ctd": "Service lift PC Sherpa-SD4 400V CB, EU", "cat": "Turn & Funda\u021bie"}, {"d": "lub. sys. rot. bearing", "m": "Lincoln", "md": "636-36623-2", "ct": "41155", "ctd": "Lubrication unit,Lincoln, rotor bearing", "cat": "Nacel\u0103 & Structur\u0103"}, {"d": "lubrication system rotor hub", "m": "Lincoln", "md": "636-45094-4", "ct": "39928", "ctd": "Central lubrication system Lincoln pitch", "cat": "Rotor & Pale"}, {"d": "main box - n. i.", "m": "", "md": "", "ct": "", "ctd": "", "cat": "Altele"}, {"d": "main frame", "m": "EGT", "md": "", "ct": "43553", "ctd": "Pre-fabrication cast main frame,MM92/100", "cat": "Nacel\u0103 & Structur\u0103"}, {"d": "medium voltage switchgear", "m": "EATON", "md": "XIRIA", "ct": "51176", "ctd": "Switchgear_24kV_0630A_20/1_3TKK0I_000_MM", "cat": "Sistem Electric"}, {"d": "MM92/100", "m": "Ventipower", "md": "MM92/100", "ct": "", "ctd": "", "cat": "Altele"}, {"d": "nacelle", "m": "Ventipower", "md": "", "ct": "", "ctd": "", "cat": "Nacel\u0103 & Structur\u0103"}, {"d": "nacelle enclosure", "m": "DEMACON", "md": "", "ct": "57478", "ctd": "Cabin 50Hz, MM", "cat": "Nacel\u0103 & Structur\u0103"}, {"d": "obstacle light", "m": "Reetec", "md": "RE-LED865/864", "ct": "30375", "ctd": "Beacon, aviation l.,white/red,LED,Reetec", "cat": "Sistem de Control"}, {"d": "obstacle light control box", "m": "Reetec", "md": "RE-LED86x", "ct": "39946", "ctd": "Control cabinet, aviation light, Reetec", "cat": "Sistem de Control"}, {"d": "oil filtering system", "m": "EATON", "md": "TWF-1950", "ct": "", "ctd": "", "cat": "Cutie de Viteze"}, {"d": "osc. sensors drive train", "m": "PCH", "md": "CHB 1102", "ct": "45661", "ctd": "Sensor,ext.vibration,PCH1026/CHB1102+CHL", "cat": "Sistem de Control"}, {"d": "oscillation sensors smart-tower", "m": "PCH", "md": "CHF 8877", "ct": "42137", "ctd": "Sensor, vibration m.,PCH1026/CHF8877,MK2", "cat": "Turn & Funda\u021bie"}, {"d": "oscillation sensors tower", "m": "PCH", "md": "CHF 8728", "ct": "45659", "ctd": "Sensor, vibration m.,PCH1026/CHF8728,MK2", "cat": "Turn & Funda\u021bie"}, {"d": "pitch hub controller", "m": "L+B", "md": "GEL8231", "ct": "", "ctd": "", "cat": "Rotor & Pale"}, {"d": "pitch motor (\u00d73)", "m": "Moog (Lust)", "md": "681-00107", "ct": "27954", "ctd": "Pitch, basis, Moog, MM", "cat": "Sistem Pitch"}, {"d": "pitch system-COMP", "m": "Moog (Lust)", "md": "180-50028", "ct": "", "ctd": "", "cat": "Sistem Pitch"}, {"d": "rechargeable battery box (\u00d73)", "m": "Moog (Lust)", "md": "", "ct": "27954", "ctd": "Pitch, basis, Moog, MM", "cat": "Altele"}, {"d": "rotor bearing", "m": "FAG", "md": "F-603067.PRL-WPOS", "ct": "59160", "ctd": "spherical roller bearing, 240/710 (FAG)", "cat": "Nacel\u0103 & Structur\u0103"}, {"d": "rotor blade (\u00d73)", "m": "Ria Blades", "md": "RE45.2 (RB)", "ct": "57585", "ctd": "Rotor blade RE45.2, 000", "cat": "Rotor & Pale"}, {"d": "rotor blade set", "m": "Ria Blades", "md": "RE45.2 (RB)", "ct": "", "ctd": "", "cat": "Rotor & Pale"}, {"d": "rotor brake caliper", "m": "Stromag WEP", "md": "BCHM90-07", "ct": "41411", "ctd": "Brake calliper, rotor- STROMAG BCHM90-07", "cat": "Fr\u00e2nare"}, {"d": "rotor hub", "m": "Ningbo", "md": "", "ct": "19656", "ctd": "Hub, MM82/92", "cat": "Rotor & Pale"}, {"d": "rotor hub-COMP", "m": "Ventipower", "md": "", "ct": "", "ctd": "", "cat": "Rotor & Pale"}, {"d": "rotor locking disk", "m": "Famet", "md": "", "ct": "22514", "ctd": "Rotor lock disk, MM92", "cat": "Fr\u00e2nare"}, {"d": "rotor shaft", "m": "Jinlei", "md": "", "ct": "22507", "ctd": "Rotor shaft, MM92/MM100", "cat": "Nacel\u0103 & Structur\u0103"}, {"d": "slip ring unit", "m": "Mersen (Dietrich)", "md": "USDK234/296", "ct": "22617", "ctd": "Slip ring unit, MM/3.XM MER", "cat": "Generator"}, {"d": "spinner", "m": "Demacon", "md": "", "ct": "47415", "ctd": "Hub casing pre-assembly", "cat": "Rotor & Pale"}, {"d": "stator connection cabinet", "m": "Siemens", "md": "n. l. / n. r. / illi", "ct": "", "ctd": "", "cat": "Sistem Electric"}, {"d": "top box", "m": "SSB", "md": "", "ct": "46732", "ctd": "Top box cpl., MM50Hz 2.1", "cat": "Altele"}, {"d": "tower", "m": "Leucci", "md": "MM92/100 IEC2a-2005", "ct": "57993", "ctd": "Tubular tower MM92,IEC2a/3a/WZ3B,100m", "cat": "Turn & Funda\u021bie"}, {"d": "transformer - intern", "m": "SGB", "md": "DTTH1NG 2500/20", "ct": "60912", "ctd": "Trafo_2500kVA_50Hz_20,00kV_S_2_AF___0_MM", "cat": "Sistem Electric"}, {"d": "ultrasonic anemometer", "m": "", "md": "", "ct": "", "ctd": "", "cat": "Sistem de Control"}, {"d": "UPS", "m": "Delta", "md": "GES202R", "ct": "", "ctd": "", "cat": "Sistem Electric"}, {"d": "vane", "m": "", "md": "", "ct": "", "ctd": "", "cat": "Sistem de Control"}, {"d": "weather mast-COMP", "m": "", "md": "", "ct": "", "ctd": "", "cat": "Sistem de Control"}, {"d": "wind turbine control computer", "m": "Bachmann", "md": "MPC 293", "ct": "34356", "ctd": "Modul, Prozessor-, MPC293-128/512MB CF", "cat": "Sistem de Control"}, {"d": "yaw adjustment-COMP", "m": "", "md": "", "ct": "", "ctd": "", "cat": "Sistem Yaw"}, {"d": "yaw bearing", "m": "Liebherr", "md": "KUD318VA802-000", "ct": "35406", "ctd": "Yaw bearing, Liebherr, MM92 CCV", "cat": "Sistem Yaw"}, {"d": "yaw brake (\u00d710)", "m": "Stromag WEP", "md": "CB-90-A", "ct": "41410", "ctd": "Brake calliper, yaw STROMAG CB90A", "cat": "Sistem Yaw"}, {"d": "yaw brake disk", "m": "Famet", "md": "", "ct": "10610", "ctd": "Brake Disc, yaw, MD/MM", "cat": "Sistem Yaw"}, {"d": "yaw gearbox (\u00d74)", "m": "Bonfiglioli", "md": "MT711T073", "ct": "57950", "ctd": "Drive, Yaw, MM, 50Hz, NCV/CCV, Bonfi.", "cat": "Sistem Yaw"}, {"d": "yaw motor (\u00d74)", "m": "Bonfiglioli", "md": "BN112M6FD", "ct": "57950", "ctd": "Drive, Yaw, MM, 50Hz, NCV/CCV, Bonfi.", "cat": "Sistem Yaw"}]}]};
+
+const SEED_PARKS=[
+  {id:"p1",name:"CEE Blue 1, Agighiol",type:"eolian",location:"Comuna Valea Nucarilor, Satul Agighiol, Jud. Tulcea",capacity:1.7,units:"2x PowerWind 56 (0.85 MW)",year:2011,details:"Turn conic 71m, rotor 56m, generator ABB asincron",color:"#60a5fa"},
+  {id:"p2",name:"Blue 2, Bestepe",type:"mixt",location:"Localitatea Bestepe, Jud. Tulcea",capacity:7.25,units:"3x Senvion MM92 (2.05 MW) + CEF 1.1 MW",year:2013,details:"Eolian: 3 turbine MM92, 2.05 MW fiecare = 6.15 MW\nSolar+Baterie: Panouri Sharp 2652 buc, Invertoare Sungrow 5x250K = 1.1 MW",color:"#34d399",sub:[{name:"Eolian (3x MM92)",cap:6.15,type:"eolian"},{name:"Solar + Baterie",cap:1.1,type:"solar"}]},
+  {id:"p3",name:"CEE Bestepe, etapa I (Diosig)",type:"eolian",location:"Intravilanul Localitatii Diosig, Jud. Bihor",capacity:2.05,units:"1x Senvion MM92 (2.05 MW)",year:2016,details:"Turn 100m, rotor 92.5m, generator asincron 2050 kW",color:"#a78bfa"},
+  {id:"p4",name:"CEE Bestepe, etapa II",type:"eolian",location:"Comuna Bestepe, Jud. Tulcea",capacity:2.05,units:"1x Senvion MM92 (2.05 MW)",year:2025,details:"Turn 80m, rotor 92m, generator asincron 2050 kW",color:"#f472b6"},
+  {id:"p5",name:"CEF Sannicoara 1",type:"solar",location:"Comuna Chiochis, Satul Sannicoara, Jud. Bistrita-Nasaud",capacity:0.285,units:"950 panouri x 300W",year:2020,details:"Invertoare: 4x60kW + 1x25kW + 1x20kW = 285 kW",color:"#fbbf24"},
+  {id:"p6",name:"CEF Sannicoara 2",type:"solar",location:"Comuna Chiochis, Satul Sannicoara, Jud. Bistrita-Nasaud",capacity:0.285,units:"950 panouri x 300W",year:2020,details:"Invertoare: 4x60kW + 1x25kW + 1x20kW = 285 kW",color:"#fb923c"},
+  {id:"p7",name:"CEF Tulcea, etapa I",type:"solar",location:"Extravilanul Localitatii Tulcea, Jud. Tulcea",capacity:2.9,units:"6604 panouri Sharp + 29x Huawei Sungrow 100kW",year:2024,details:"Putere panouri: 3.566 MW\nPutere invertoare: 2.9 MW\nPC 20kV",color:"#22d3ee"}
+];
+
+
+
+const DEFAULT_CATS=["Rotor & Pale","Nacel\u0103 & Structur\u0103","Generator","Cutie de Viteze","Sistem Pitch","Sistem Electric","Sistem Yaw","Turn & Funda\u021bie","Sistem de Control","Fr\u00e2nare","Altele"];
+function loadCats(){try{const v=localStorage.getItem("mm92cats");return v?JSON.parse(v):DEFAULT_CATS}catch{return DEFAULT_CATS}}
+function saveCats(){localStorage.setItem("mm92cats",JSON.stringify(CATS))}
+let CATS=loadCats()
+const CC={"Rotor & Pale":"#34d399","Nacelă & Structură":"#60a5fa","Generator":"#f472b6","Cutie de Viteze":"#fbbf24","Sistem Pitch":"#a78bfa","Sistem Electric":"#fb923c","Sistem Yaw":"#22d3ee","Turn & Fundație":"#94a3b8","Sistem de Control":"#4ade80","Frânare":"#f87171","Altele":"#6b7280"};
+const ICO=s=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="10" r="2"/><path d="M12 8C12 8 11 1 7 1C5 1 4 3 5.5 4.5C7 6 12 8 12 8Z"/><path d="M13.5 11C13.5 11 19 14 21 11C22 9 20 7.5 18.5 8.5C17 9.5 13.5 11 13.5 11Z"/><path d="M10.5 11.5C10.5 11.5 5 14.5 3 12C1.5 10 3.5 8.5 5 9.5C6.5 10.5 10.5 11.5 10.5 11.5Z"/><path d="M12 12V22" stroke-width="2"/><path d="M8 22H16" stroke-width="2"/></svg>`;
+
+function loadDB(k,s){try{const v=localStorage.getItem(k);return v?JSON.parse(v):s}catch{return s}}
+function saveDB(k,d){try{localStorage.setItem(k,JSON.stringify(d))}catch(e){console.error(e)}}
+let db=loadDB("mm92v22",null);
+if(!db){db=JSON.parse(JSON.stringify(SEED));db.spare=[];db.parks=JSON.parse(JSON.stringify(SEED_PARKS));saveDB("mm92v22",db)}
+if(!db.spare)db.spare=[];
+if(!db.parks)db.parks=JSON.parse(JSON.stringify(SEED_PARKS));
+// Ensure images arrays exist
+db.turbines.forEach(t=>t.components.forEach(c=>{if(!c.imgs)c.imgs=[]}));
+db.spare.forEach(p=>{if(!p.imgs)p.imgs=[]});
+
+function save(){saveDB("mm92v22",db)}
+function esc(s){if(!s)return"";const d=document.createElement("div");d.textContent=s;return d.innerHTML}
+let S={mode:"registry",wtg:db.turbines[0]?.id||"",search:"",cat:"Toate",sparePark:"all",parkFilter:"all"};
+
+/* ═══ MAIN RENDER ═══ */
+function render(){
+  let t=db.turbines.find(x=>x.id===S.wtg)||db.turbines[0];
+  // If park filter active and current WTG not in filtered park, switch
+  if(S.parkFilter!=='all' && t && t.parkId!==S.parkFilter){
+    const parkWtgs=db.turbines.filter(x=>x.parkId===S.parkFilter);
+    if(parkWtgs.length>0){S.wtg=parkWtgs[0].id;t=parkWtgs[0]}
+  }
+  let h=`<header style="border-bottom:1px solid var(--brd);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;background:rgba(9,12,14,.72);position:sticky;top:0;z-index:50;backdrop-filter:blur(8px)">
+    <div style="display:flex;align-items:center;gap:8px"><div style="color:var(--acc)">${ICO(22)}</div><div>
+      <h1 style="font-family:var(--fh);font-size:22px;font-weight:800;color:#e2e8f0">BLUE LINE <span style="color:var(--acc)">ENERGY</span></h1>
+      <p style="font-size:11px;color:var(--tx4);letter-spacing:2.5px">REGISTRU COMPONENTE & STOC PIESE</p></div></div>
+    <div style="display:flex;gap:4px;align-items:center">
+      <span id="sync-badge" style="display:inline-flex;align-items:center;padding:2px 6px"></span>
+      <button class="b bs" onclick="cloudSave().then(ok=>{if(ok)alert('Datele au fost salvate în cloud!');else alert('Eroare la salvare. Verifică conexiunea.')})" title="Salvează în cloud" style="font-size:11px;padding:4px 8px">⬆ Cloud</button>
+      <button class="b bs" onclick="if(confirm('Încarci datele din cloud? Datele locale vor fi înlocuite.')){cloudLoad().then(ok=>{if(ok)alert('Datele au fost încărcate din cloud!');else alert('Eroare la încărcare. Verifică conexiunea.')})}" title="Încarcă din cloud" style="font-size:11px;padding:4px 8px">⬇ Cloud</button>
+      <button class="b bs" onclick="exportBackup()" title="Salvează backup local" style="font-size:12px;padding:4px 8px">💾</button>
+      <button class="b bs" onclick="importBackup()" title="Restaurează din backup" style="font-size:12px;padding:4px 8px">📂</button>
+      <div class="theme-btn"><button class="b bs" onclick="toggleThemeMenu()" title="Schimbă tema" style="font-size:16px;padding:4px 10px">🎨</button>
+        <div class="theme-menu">${THEMES.map(t=>`<button class="theme-opt ${loadTheme()===t.id?'active':''}" onclick="applyTheme('${t.id}');render()"><span class="theme-dot" style="background:${t.dot}"></span>${t.name}</button>`).join("")}</div></div>
+      <button class="b ${S.mode==='registry'?'bp':'bs'}" onclick="S.mode='registry';render()">Registru</button>
+      <button class="b ${S.mode==='spare'?'bp':'bs'}" onclick="S.mode='spare';render()">Stoc Piese</button>
+      <button class="b bs" onclick="if(confirm('Reset?')){db=JSON.parse(JSON.stringify(SEED));db.spare=[];db.parks=JSON.parse(JSON.stringify(SEED_PARKS));db.turbines.forEach(t=>t.components.forEach(c=>{if(!c.imgs)c.imgs=[]}));save();S.wtg=db.turbines[0]?.id;render()}">↻</button></div></header>`;
+
+  if(S.mode==="registry" && t){
+    // PARKS DASHBOARD
+    const parks=db.parks||[];
+    const totalMW=parks.reduce((a,p)=>a+p.capacity,0);
+    const eolianMW=parks.filter(p=>p.type==="eolian"||p.type==="mixt").reduce((a,p)=>a+(p.sub?p.sub.find(s=>s.type==="eolian")?.cap||p.capacity:p.capacity),0);
+    const solarMW=parks.filter(p=>p.type==="solar"||p.type==="mixt").reduce((a,p)=>a+(p.sub?p.sub.find(s=>s.type==="solar")?.cap||0:p.type==="solar"?p.capacity:0),0);
+
+    h+=`<div style="padding:12px 16px;border-bottom:1px solid var(--brd);background:rgba(9,12,14,.3)">`;
+    // Summary bar
+    h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-family:var(--fh);font-size:16px;font-weight:800;color:#e2e8f0">Portofoliu Parcuri</span>
+        <span style="font-family:var(--fh);font-size:22px;font-weight:900;color:var(--acc)">${totalMW.toFixed(2)} MW</span>
+      </div>
+      <div style="display:flex;gap:12px;font-size:12px">
+        <span style="color:#60a5fa">\u26A1 Eolian: ${eolianMW.toFixed(2)} MW</span>
+        <span style="color:#fbbf24">\u2600 Solar: ${solarMW.toFixed(2)} MW</span>
+        <span style="color:var(--tx3)">${parks.length} parcuri</span>
+        <button class="b bs" style="padding:3px 8px;font-size:9px" onclick="exportParks()" title="Export parcuri">⬇ XLS</button><button class="b bs" style="padding:3px 8px;font-size:9px" onclick="editParks()">✎ Editare</button>
+      </div>
+    </div>`;
+
+    // Park cards row
+    h+=`<div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px">`;
+    h+=`<div style="flex-shrink:0;min-width:80px;background:${S.parkFilter==='all'?'rgba(14,165,233,.08)':'rgba(11,15,18,.6)'};border:1px solid ${S.parkFilter==='all'?'var(--acc)':'var(--brd)'};border-radius:8px;padding:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s" onclick="S.parkFilter='all';render()">
+      <div style="text-align:center"><div style="font-size:11px;font-weight:700;color:${S.parkFilter==='all'?'var(--acc)':'#e2e8f0'}">Toate</div><div style="font-size:9px;color:var(--tx4)">${db.turbines.length} WTG</div></div></div>`;
+    parks.forEach((p,i)=>{
+      const typeIcon=p.type==="eolian"?"\u26A1":p.type==="solar"?"\u2600":"\u26A1\u2600";
+      h+=`<div style="flex-shrink:0;min-width:170px;background:${S.parkFilter===p.id?'rgba(14,165,233,.08)':'rgba(11,15,18,.6)'};border:1px solid ${S.parkFilter===p.id?p.color:'var(--brd)'};border-radius:8px;padding:10px;cursor:pointer;border-left:3px solid ${p.color};transition:all .15s" onmouseover="this.style.borderColor='${p.color}'" onmouseout="this.style.borderColor='${S.parkFilter===p.id?p.color:'var(--brd)'}';this.style.borderLeftColor='${p.color}'" ondblclick="event.stopPropagation();showParkDetail(${i})" onclick="selectPark(${i})">
+        <div style="font-size:11px;font-weight:700;color:#e2e8f0;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${typeIcon} ${esc(p.name)}</div>
+        <div style="font-family:var(--fh);font-size:20px;font-weight:800;color:${p.color}">${p.capacity} MW</div>
+        <div style="font-size:9px;color:var(--tx3);margin-top:2px">${esc(p.units)}</div>
+        <div style="font-size:9px;color:var(--tx4)">PIF: ${p.year}</div>
+      </div>`;
+    });
+    h+=`</div></div>`;
+
+    h+=`<div style="display:flex;border-bottom:1px solid var(--brd);padding:0 16px;overflow-x:auto;background:rgba(9,12,14,.6);backdrop-filter:blur(4px);gap:2px;align-items:end">`;
+    const filteredWtgs=S.parkFilter==='all'?db.turbines:db.turbines.filter(wt=>wt.parkId===S.parkFilter);
+    filteredWtgs.forEach(wt=>h+=`<button class="wtab ${S.wtg===wt.id?'ac':''}" onclick="S.wtg='${wt.id}';S.search='';S.cat='Toate';render()">${esc(wt.name)}</button>`);
+    if(S.parkFilter!=='all'){const uf=db.turbines.length-filteredWtgs.length;if(uf>0)h+=`<button class="wtab" style="color:var(--tx4);font-size:10px;opacity:.5" onclick="S.parkFilter='all';render()">+${uf} altele</button>`}
+    h+=`<button class="wtab" style="color:var(--grn);font-size:14px;padding:4px 8px" onclick="addWTG()">+</button>`;
+    h+=`<button class="wtab" style="color:var(--tx4);font-size:9px" onclick="editWTG('${t.id}')">✎</button></div>`;
+
+    h+=`<div style="padding:10px 16px;border-bottom:1px solid var(--brd);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+      <div><span style="font-family:var(--fh);font-size:20px;font-weight:700;color:#e2e8f0">${esc(t.name)}</span>
+      <span style="font-size:14px;color:var(--tx3);margin-left:8px">${esc(t.type)} · SN: ${esc(t.sn)} · ${t.components.length} comp.${t.parkId?` · <span style="color:${(db.parks||[]).find(p=>p.id===t.parkId)?.color||'var(--tx3)'}">${esc((db.parks||[]).find(p=>p.id===t.parkId)?.name||'')}</span>`:''}</span></div>
+      <input type="text" placeholder="Caută..." value="${esc(S.search)}" oninput="S.search=this.value;render()" style="width:200px">
+      <button class="b bs" onclick="exportRegistry()" title="Export turbina curentă">⬇ XLS</button>
+      <button class="b bs" onclick="exportAllRegistry()" title="Export toate turbinele">⬇ Tot</button></div>`;
+
+    const catCounts={};t.components.forEach(c=>{catCounts[c.cat]=(catCounts[c.cat]||0)+1});
+    h+=`<div style="padding:8px 16px;display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--brd);align-items:center;background:rgba(9,12,14,.5)">`;
+    h+=`<button class="stab ${S.cat==='Toate'?'ac':''}" onclick="S.cat='Toate';render()">Toate</button>`;
+    CATS.forEach(c=>{if(catCounts[c])h+=`<button class="stab ${S.cat===c?'ac':''}" onclick="S.cat='${c}';render()">${c} <span style="opacity:.5">${catCounts[c]}</span></button>`});
+    h+=`<button class="b bs" style="padding:4px 8px;font-size:8px;margin-left:auto" onclick="editCats()" title="Editare categorii">⚙</button>`;
+    h+=`</div>`;
+
+    const fl=t.components.filter(c=>{const q=S.search.toLowerCase();const ms=!q||c.d.toLowerCase().includes(q)||c.m.toLowerCase().includes(q)||(c.md||"").toLowerCase().includes(q)||(c.ctd||"").toLowerCase().includes(q);return ms&&(S.cat==="Toate"||c.cat===S.cat)});
+
+    h+=`<div style="padding:8px 16px"><div style="font-size:14px;color:var(--tx4);margin-bottom:8px">${fl.length} componente</div>`;
+    h+=`<div style="overflow-x:auto;border:1px solid var(--brd);border-radius:6px;background:rgba(11,15,18,.6)"><table style="width:100%;border-collapse:collapse;font-size:15px"><thead><tr style="border-bottom:1px solid var(--brd);background:var(--bg1)">`;
+    ["#","","Componentă","Producător","Model","Categorie"].forEach((x,i)=>h+=`<th style="padding:10px 12px;text-align:left;color:#7a9aa8;font-weight:600;font-size:12px;letter-spacing:.8px;text-transform:uppercase;${i<2?'width:30px;':''}">${x}</th>`);
+    h+=`</tr></thead><tbody>`;
+    fl.forEach((c,i)=>{const cc=CC[c.cat]||"#6b7280";const hasImg=c.imgs&&c.imgs.length>0;const ri=t.components.indexOf(c);
+      h+=`<tr class="row" style="border-bottom:1px solid rgba(21,28,34,.06);cursor:pointer;animation:fu .25s ease ${Math.min(i*.015,.4)}s both" onclick="showComp('${t.id}',${ri})">
+        <td style="padding:8px 10px;color:var(--tx4);font-size:14px">${i+1}</td>
+        <td style="padding:8px 6px">${hasImg?`<img src="${c.imgs[0]}" style="width:40px;height:32px;object-fit:cover;border-radius:4px;border:1px solid var(--brd2)">`:`<span style="color:var(--tx5);font-size:8px">—</span>`}</td>
+        <td style="padding:8px 10px;color:#f0f4f8;font-weight:500">${esc(c.d)}</td>
+        <td style="padding:8px 10px;color:var(--tx2)">${esc(c.m)}</td>
+        <td style="padding:8px 10px;color:var(--tx3);font-size:14px">${esc(c.md)}</td>
+        
+        <td style="padding:5px 8px"><span class="tg" style="color:${cc};background:${cc}15;border:1px solid ${cc}25">${c.cat}</span></td></tr>`;
+    });
+    h+=`</tbody></table></div></div>`;
+  } else if(S.mode==="spare"){
+    const sparks=db.parks||[];
+    h+=`<div style="padding:10px 16px;border-bottom:1px solid var(--brd);background:rgba(9,12,14,.3)">`;
+    h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <span style="font-family:var(--fh);font-size:16px;font-weight:800;color:#e2e8f0">Stoc Piese de Schimb</span>
+      <div style="display:flex;gap:6px"><input type="text" placeholder="Caută..." value="${esc(S.search)}" oninput="S.search=this.value;render()" style="width:200px"><button class="b bs" onclick="exportSpare()" title="Export stoc">⬇ XLS</button><button class="b bp" onclick="addSpare()">+ Piesă</button></div></div>`;
+    h+=`<div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px">`;
+    h+=`<div style="flex-shrink:0;min-width:80px;background:${S.sparePark==='all'?'rgba(14,165,233,.08)':'rgba(11,15,18,.6)'};border:1px solid ${S.sparePark==='all'?'var(--acc)':'var(--brd)'};border-radius:8px;padding:8px 12px;cursor:pointer;transition:all .15s" onclick="S.sparePark='all';render()">
+      <div style="font-size:11px;font-weight:700;color:${S.sparePark==='all'?'var(--acc)':'#e2e8f0'}">Toate</div>
+      <div style="font-family:var(--fh);font-size:18px;font-weight:800;color:var(--acc)">${db.spare.length}</div>
+      <div style="font-size:9px;color:var(--tx4)">piese</div></div>`;
+    sparks.forEach((pk,i)=>{
+      const cnt=db.spare.filter(s=>s.parkId===pk.id).length;
+      h+=`<div style="flex-shrink:0;min-width:140px;background:${S.sparePark===pk.id?'rgba(14,165,233,.08)':'rgba(11,15,18,.6)'};border:1px solid ${S.sparePark===pk.id?pk.color:'var(--brd)'};border-radius:8px;padding:8px 12px;cursor:pointer;border-left:3px solid ${pk.color};transition:all .15s" onclick="S.sparePark='${pk.id}';render()">
+        <div style="font-size:10px;font-weight:700;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${pk.type==='eolian'?'\u26A1':pk.type==='solar'?'\u2600':'\u26A1\u2600'} ${esc(pk.name)}</div>
+        <div style="font-family:var(--fh);font-size:18px;font-weight:800;color:${pk.color}">${cnt}</div>
+        <div style="font-size:9px;color:var(--tx4)">piese</div></div>`;
+    });
+    const unaCnt=db.spare.filter(s=>!s.parkId).length;
+    h+=`<div style="flex-shrink:0;min-width:80px;background:${S.sparePark==='unassigned'?'rgba(14,165,233,.08)':'rgba(11,15,18,.6)'};border:1px solid ${S.sparePark==='unassigned'?'var(--tx3)':'var(--brd)'};border-radius:8px;padding:8px 12px;cursor:pointer;transition:all .15s" onclick="S.sparePark='unassigned';render()">
+      <div style="font-size:10px;font-weight:700;color:var(--tx3)">Neasignat</div>
+      <div style="font-family:var(--fh);font-size:18px;font-weight:800;color:var(--tx3)">${unaCnt}</div>
+      <div style="font-size:9px;color:var(--tx4)">piese</div></div>`;
+    h+=`</div></div>`;
+    const selP=S.sparePark==='all'?null:S.sparePark==='unassigned'?'_none':S.sparePark;
+    const parkSpare=selP===null?db.spare:selP==='_none'?db.spare.filter(s=>!s.parkId):db.spare.filter(s=>s.parkId===selP);
+    const parkLabel=S.sparePark==='all'?'Toate':S.sparePark==='unassigned'?'Neasignat':(sparks.find(pk=>pk.id===S.sparePark)?.name||'');
+    h+=`<div style="padding:6px 16px;border-bottom:1px solid var(--brd);font-size:13px;color:var(--tx3)">${parkLabel} · ${parkSpare.length} piese</div>`;
+    const sfl=db.spare.filter(p=>{const q=S.search.toLowerCase();return!q||p.name.toLowerCase().includes(q)||(p.partNumber||"").toLowerCase().includes(q)||(p.supplier||"").toLowerCase().includes(q)});
+    if(!sfl.length){h+=`<div style="padding:60px;text-align:center;color:var(--tx3)"><p>Nicio piesă. Apasă "+ Piesă".</p></div>`}
+    else{h+=`<div style="padding:8px 16px"><div style="overflow-x:auto;border:1px solid var(--brd);border-radius:6px;background:rgba(11,15,18,.6)"><table style="width:100%;border-collapse:collapse;font-size:15px"><thead><tr style="border-bottom:1px solid var(--brd);background:var(--bg1)">`;
+    ["","Nume","Part# / Model","Producător","Nr.Int","Stoc","Min","Locație","Parc","Furnizor","Preț",""].forEach(x=>h+=`<th style="padding:10px 12px;text-align:left;color:#7a9aa8;font-weight:600;font-size:12px;letter-spacing:.8px;text-transform:uppercase">${x}</th>`);
+    h+=`</tr></thead><tbody>`;
+    sfl.forEach((p,i)=>{const sc=p.quantity===0?"var(--red)":p.quantity<=p.minQuantity?"var(--ylw)":"var(--grn)";const hi=p.imgs&&p.imgs.length>0;
+      h+=`<tr class="row" style="border-bottom:1px solid rgba(21,28,34,.06);cursor:pointer" onclick="editSpare(${db.spare.indexOf(p)})">
+        <td style="padding:5px 4px;width:32px">${hi?`<img src="${p.imgs[0]}" style="width:40px;height:32px;object-fit:cover;border-radius:4px;border:1px solid var(--brd2)">`:`<span style="color:var(--tx5);font-size:8px">—</span>`}</td>
+        <td style="padding:8px 10px;color:#f0f4f8;font-weight:500">${esc(p.name)}</td>
+        <td style="padding:8px 10px;color:var(--tx3);font-size:9px">${esc(p.partNumber||"—")}</td>
+        <td style="padding:8px 10px;color:var(--tx2)">${esc(p.manufacturer||p.supplier?.name||p.supplier||"—")}</td>
+        <td style="padding:5px 8px"><span style="color:${sc};font-weight:700">${p.quantity}</span></td>
+        <td style="padding:8px 10px;color:var(--tx4)">${p.minQuantity}</td>
+        <td style="padding:8px 10px;color:var(--tx3);font-size:12px">${esc(p.location||"—")}</td>
+        <td style="padding:8px 10px;color:var(--tx3);font-size:11px">${esc((db.parks||[]).find(pk=>pk.id===p.parkId)?.name||"—")}</td>
+        <td style="padding:8px 10px;color:var(--tx3);font-size:9px">${esc(p.location||"—")}</td>
+        <td style="padding:8px 10px;color:var(--tx3);font-size:13px">${esc(p.supplier?.name||"—")}</td>
+        <td style="padding:8px 10px;color:var(--tx2)">${p.price?p.price+" €":"—"}</td>
+        <td style="padding:5px 8px"><button class="b bd" style="font-size:11px;padding:4px 8px" onclick="event.stopPropagation();if(confirm('Ștergi?')){db.spare.splice(${db.spare.indexOf(p)},1);save();render()}">×</button></td></tr>`});
+    h+=`</tbody></table></div></div>`}
+  }
+  document.getElementById("app").innerHTML=h;
+}
+
+/* ═══ MODALS ═══ */
+function showMod(c){const m=document.createElement("div");m.className="mo";m.innerHTML=`<div class="ml">${c}</div>`;m.addEventListener("click",e=>{if(e.target===m)closeMod(m.querySelector(".ml"))});document.body.appendChild(m);requestAnimationFrame(()=>m.classList.add("show"));return m}
+function closeMod(el){const m=el?.closest?el.closest(".mo"):el;if(m){m.classList.remove("show");setTimeout(()=>m.remove(),200)}}
+
+/* ═══ PHOTO HELPERS ═══ */
+function triggerPhotoUpload(wtgId, compIdx, isSpare){
+  const inp=document.createElement("input");inp.type="file";inp.accept="image/*";inp.multiple=true;
+  inp.onchange=()=>{
+    const promises=Array.from(inp.files).map(f=>new Promise(res=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.readAsDataURL(f)}));
+    Promise.all(promises).then(imgs=>{
+      if(isSpare){db.spare[compIdx].imgs=(db.spare[compIdx].imgs||[]).concat(imgs)}
+      else{const t=db.turbines.find(x=>x.id===wtgId);if(t){t.components[compIdx].imgs=(t.components[compIdx].imgs||[]).concat(imgs)}}
+      save();
+      // Refresh the modal
+      document.querySelectorAll(".mo").forEach(m=>m.remove());
+      if(isSpare)editSpare(compIdx);else showComp(wtgId,compIdx);
+      render();
+    });
+  };
+  inp.click();
+}
+
+function removePhoto(wtgId, compIdx, photoIdx, isSpare){
+  if(isSpare){db.spare[compIdx].imgs.splice(photoIdx,1)}
+  else{const t=db.turbines.find(x=>x.id===wtgId);if(t)t.components[compIdx].imgs.splice(photoIdx,1)}
+  save();document.querySelectorAll(".mo").forEach(m=>m.remove());
+  if(isSpare)editSpare(compIdx);else showComp(wtgId,compIdx);
+  render();
+}
+
+/* ═══ COMPONENT DETAIL ═══ */
+function showComp(wtgId,idx){
+  const t=db.turbines.find(x=>x.id===wtgId);if(!t)return;
+  const c=t.components[idx];if(!c)return;
+  if(!c.imgs)c.imgs=[];
+  const cc=CC[c.cat]||"#6b7280";
+  const mainImg=c.imgs[0]||null;
+
+  let h=``;
+  // Hero image or placeholder
+  if(mainImg){
+    h+=`<img src="${mainImg}" class="img-hero" id="hero-img" onclick="openFullscreen(this.src)">`;
+  } else {
+    h+=`<div class="img-placeholder"><div style="text-align:center;color:var(--tx4)">${ICO(48)}<p style="margin-top:8px;font-size:10px">Fără fotografie</p></div></div>`;
+  }
+
+  // Photo strip (thumbnails)
+  if(c.imgs.length>0){
+    h+=`<div class="img-strip">`;
+    c.imgs.forEach((img,i)=>{
+      h+=`<div class="img-wrap"><img src="${img}" class="img-thumb ${i===0?'active':''}" ondblclick="openFullscreen(this.src)" onclick="document.getElementById('hero-img').src='${img.replace(/'/g,"\\'")}';document.querySelectorAll('.img-thumb').forEach(t=>t.classList.remove('active'));this.classList.add('active')"><button class="img-rm" onclick="event.stopPropagation();removePhoto('${wtgId}',${idx},${i},false)">×</button></div>`;
+    });
+    h+=`<button class="b bs" style="flex-shrink:0;height:45px;display:flex;align-items:center" onclick="triggerPhotoUpload('${wtgId}',${idx},false)">📷+</button>`;
+    h+=`</div>`;
+  }
+
+  h+=`<div style="padding:18px">`;
+  // Photo button if no photos
+  if(c.imgs.length===0){
+    h+=`<button class="b bp" style="width:100%;margin-bottom:14px;padding:10px" onclick="triggerPhotoUpload('${wtgId}',${idx},false)">📷 Adaugă Fotografii</button>`;
+  }
+
+  h+=`<div style="margin-bottom:14px"><span class="tg" style="color:${cc};background:${cc}15;border:1px solid ${cc}25">${c.cat}</span>
+    <h2 style="font-family:var(--fh);font-size:24px;font-weight:800;color:#e2e8f0;margin-top:6px">${esc(c.d)}</h2>
+    <p style="font-size:14px;color:var(--tx3);margin-top:2px">${esc(t.name)} · ${esc(t.sn)}</p></div>`;
+
+  h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+    <div class="ib"><div class="lbl">Producător</div><div style="font-size:18px;color:#e2e8f0;font-weight:600">${esc(c.m||"—")}</div></div>
+    <div class="ib"><div class="lbl">Model</div><div style="font-size:16px;color:#e2e8f0;font-family:monospace">${esc(c.md||"—")}</div></div>
+    
+    <div class="ib"><div class="lbl">ConstType</div><div style="font-size:16px;color:#e2e8f0">${esc(c.ct||"—")}</div></div></div>`;
+
+  if(c.ctd)h+=`<div class="ib" style="margin-bottom:12px"><div class="lbl">Descriere</div><div style="font-size:16px;color:var(--tx2);line-height:1.6">${esc(c.ctd)}</div></div>`;
+  if(c.notes)h+=`<div class="ib" style="margin-bottom:12px"><div class="lbl">Note</div><div style="font-size:16px;color:var(--tx2);line-height:1.6">${esc(c.notes)}</div></div>`;
+
+  // Compare
+  const matches=[];
+  db.turbines.filter(x=>x.id!==wtgId).forEach(ot=>{ot.components.forEach(oc=>{if(oc.d.toLowerCase()===c.d.toLowerCase())matches.push({w:ot.name,c:oc})})});
+  if(matches.length){
+    h+=`<div class="ib" style="margin-bottom:12px"><div class="lbl" style="margin-bottom:4px">Pe alte turbine</div>`;
+    matches.forEach(mc=>h+=`<div style="padding:3px 0;border-bottom:1px solid var(--brd);font-size:14px;display:flex;justify-content:space-between"><span style="color:var(--acc)">${esc(mc.w)}</span><span style="color:var(--tx2)">${esc(mc.c.m)} ${esc(mc.c.md)}</span></div>`);
+    h+=`</div>`;
+  }
+
+  // Edit
+  h+=`<div style="margin-bottom:14px;border-top:1px solid var(--brd);padding-top:14px"><div style="color:var(--acc);font-size:14px;font-weight:700;letter-spacing:1px;margin-bottom:12px">✎ EDITARE CÂMPURI</div>
+    <div style="margin-top:10px;display:grid;gap:8px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div><label class="lbl">Componentă</label><input id="ec-d" value="${esc(c.d)}"></div>
+        <div><label class="lbl">Producător</label><input id="ec-m" value="${esc(c.m)}"></div>
+        <div><label class="lbl">Model</label><input id="ec-md" value="${esc(c.md)}"></div>
+        
+        <div><label class="lbl">ConstType</label><input id="ec-ct" value="${esc(c.ct)}"></div>
+        <div><label class="lbl">Categorie</label><select id="ec-cat">${CATS.map(x=>`<option ${c.cat===x?"selected":""}>${x}</option>`).join("")}</select></div>
+      </div>
+      <div><label class="lbl">Descriere</label><textarea id="ec-ctd" rows="2">${esc(c.ctd||"")}</textarea></div>
+      <div><label class="lbl">Note</label><textarea id="ec-notes" rows="2">${esc(c.notes||"")}</textarea></div>
+      <button class="b bg" style="width:100%" onclick="const tc=db.turbines.find(x=>x.id==='${wtgId}').components[${idx}];tc.d=document.getElementById('ec-d').value;tc.m=document.getElementById('ec-m').value;tc.md=document.getElementById('ec-md').value;tc.ct=document.getElementById('ec-ct').value;tc.cat=document.getElementById('ec-cat').value;tc.ctd=document.getElementById('ec-ctd').value;tc.notes=document.getElementById('ec-notes').value;save();document.querySelectorAll('.mo').forEach(m=>m.remove());render()">✓ Salvează</button>
+    </div></div>`;
+
+  h+=`<button class="b bo" style="width:100%;padding:12px;font-size:14px;margin-bottom:10px" onclick="sendToSpare('${wtgId}',${idx})">📦 TRIMITE CĂTRE STOC</button>`;
+  h+=`<div style="display:flex;gap:6px">
+    <button class="b bp" style="flex-shrink:0" onclick="triggerPhotoUpload('${wtgId}',${idx},false)">📷 Foto</button>
+    <button class="b bd" onclick="if(confirm('Ștergi?')){db.turbines.find(x=>x.id==='${wtgId}').components.splice(${idx},1);save();closeMod(this);render()}">Șterge</button>
+    <button class="b bs" style="flex:1" onclick="closeMod(this)">Închide</button></div></div>`;
+  showMod(h);
+}
+
+/* ═══ WTG MANAGEMENT ═══ */
+function addWTG(){showMod(`<div style="padding:20px"><h3 style="font-family:var(--fh);font-size:22px;font-weight:800;color:#e2e8f0;margin-bottom:12px">Adaugă Turbină</h3><div style="display:grid;gap:8px"><div><label class="lbl">Nume</label><input id="nw-n" placeholder="ex: WTG5"></div><div><label class="lbl">SN</label><input id="nw-s"></div><div><label class="lbl">Tip</label><input id="nw-t" value="MM92/100"></div>
+      <div><label class="lbl">Parc</label><select id="nw-park"><option value="">— Neasignat —</option>${(db.parks||[]).map(p=>`<option value="${p.id}" ${S.parkFilter!=='all'&&S.parkFilter===p.id?'selected':''}>${p.name}</option>`).join("")}</select></div><div style="display:flex;gap:6px"><button class="b bg" style="flex:1" onclick="const n=document.getElementById('nw-n').value;if(!n){alert('Nume!');return}const id='w'+Date.now();db.turbines.push({id,name:n,sn:document.getElementById('nw-s').value,type:document.getElementById('nw-t').value,parkId:document.getElementById('nw-park').value,components:[]});save();S.wtg=id;document.querySelectorAll('.mo').forEach(m=>m.remove());render()">✓ Adaugă</button><button class="b bs" onclick="closeMod(this)">Anulează</button></div></div></div>`)}
+
+function editWTG(id){const t=db.turbines.find(x=>x.id===id);if(!t)return;
+  showMod(`<div style="padding:20px"><h3 style="font-family:var(--fh);font-size:22px;font-weight:800;color:#e2e8f0;margin-bottom:12px">Editează ${esc(t.name)}</h3><div style="display:grid;gap:8px"><div><label class="lbl">Nume</label><input id="ew-n" value="${esc(t.name)}"></div><div><label class="lbl">SN</label><input id="ew-s" value="${esc(t.sn)}"></div><div><label class="lbl">Tip</label><input id="ew-t" value="${esc(t.type)}"></div>
+      <div><label class="lbl">Parc</label><select id="ew-park"><option value="">— Neasignat —</option>${(db.parks||[]).map(p=>`<option value="${p.id}" ${t.parkId===p.id?"selected":""}>${p.name}</option>`).join("")}</select></div><div style="display:flex;gap:6px"><button class="b bg" style="flex:1" onclick="const wt=db.turbines.find(x=>x.id==='${id}');wt.name=document.getElementById('ew-n').value;wt.sn=document.getElementById('ew-s').value;wt.type=document.getElementById('ew-t').value;wt.parkId=document.getElementById('ew-park').value;save();document.querySelectorAll('.mo').forEach(m=>m.remove());render()">✓ Salvează</button><button class="b bd" onclick="if(confirm('Ștergi turbina?')){db.turbines=db.turbines.filter(x=>x.id!=='${id}');if(S.wtg==='${id}')S.wtg=db.turbines[0]?.id||'';save();document.querySelectorAll('.mo').forEach(m=>m.remove());render()}">Șterge</button><button class="b bs" onclick="closeMod(this)">Anulează</button></div>
+  <hr style="border-color:var(--brd);margin:8px 0"><h4 style="font-size:10px;color:var(--acc)">ADAUGĂ COMPONENTĂ</h4>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div><label class="lbl">Componentă</label><input id="ac-d"></div><div><label class="lbl">Producător</label><input id="ac-m"></div><div><label class="lbl">Model</label><input id="ac-md"></div><div><label class="lbl">Categorie</label><select id="ac-cat">${CATS.map(c=>`<option>${c}</option>`).join("")}</select></div><div><label class="lbl">ConstType</label><input id="ac-ct"></div></div>
+  <button class="b bp" style="width:100%" onclick="const d=document.getElementById('ac-d').value;if(!d){alert('Nume!');return}db.turbines.find(x=>x.id==='${id}').components.push({d,m:document.getElementById('ac-m').value,md:document.getElementById('ac-md').value,ct:document.getElementById('ac-ct').value,ctd:'',cat:document.getElementById('ac-cat').value,notes:'',imgs:[]});save();document.getElementById('ac-d').value='';document.getElementById('ac-m').value='';document.getElementById('ac-md').value='';document.getElementById('ac-ct').value='';render()">+ Adaugă</button></div></div>`)}
+
+/* ═══ SPARE PARTS ═══ */
+function addSpare(){showMod(`<div style="padding:20px"><h3 style="font-family:var(--fh);font-size:22px;font-weight:800;color:#e2e8f0;margin-bottom:12px">Piesă Nouă</h3><div style="display:grid;gap:8px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div><label class="lbl">Nume *</label><input id="sp-n"></div><div><label class="lbl">Part#</label><input id="sp-p"></div><div><label class="lbl">Furnizor</label><input id="sp-s"></div><div><label class="lbl">Categorie</label><select id="sp-c">${CATS.map(c=>`<option>${c}</option>`).join("")}</select></div>
+        <div><label class="lbl">Parc</label><select id="sp-park"><option value="">— Neasignat —</option>${(db.parks||[]).map(p=>`<option value="${p.id}" ${S.sparePark!=='all'&&S.sparePark!=='unassigned'&&S.sparePark===p.id?'selected':''}>${p.name}</option>`).join("")}</select></div><div><label class="lbl">Cantitate</label><input type="number" id="sp-q" min="0" value="0"></div><div><label class="lbl">Min</label><input type="number" id="sp-m" min="0" value="1"></div><div><label class="lbl">Locație</label><input id="sp-l"></div><div><label class="lbl">Preț EUR</label><input type="number" id="sp-pr" min="0" value="0"></div></div><div><label class="lbl">Note</label><textarea id="sp-no" rows="2"></textarea></div><div style="display:flex;gap:6px"><button class="b bg" style="flex:1" onclick="const n=document.getElementById('sp-n').value;if(!n){alert('Nume!');return}db.spare.push({name:n,partNumber:document.getElementById('sp-p').value,supplier:document.getElementById('sp-s').value,category:document.getElementById('sp-c').value,quantity:parseInt(document.getElementById('sp-q').value)||0,minQuantity:parseInt(document.getElementById('sp-m').value)||0,location:document.getElementById('sp-l').value+(document.getElementById('sp-raft').value?' — '+document.getElementById('sp-raft').value:''),raft:document.getElementById('sp-raft').value,nrIntern:document.getElementById('sp-nrint').value,price:parseFloat(document.getElementById('sp-pr').value)||0,notes:document.getElementById('sp-no').value,imgs:[],parkId:document.getElementById('sp-park').value||''});save();document.querySelectorAll('.mo').forEach(m=>m.remove());render()">✓ Adaugă</button><button class="b bs" onclick="closeMod(this)">Anulează</button></div></div></div>`)}
+
+function editSpare(idx){const p=db.spare[idx];if(!p)return;if(!p.imgs)p.imgs=[];if(!p.supplier)p.supplier={};if(!p.manufacturer)p.manufacturer=p.supplier?.name||'';
+  const mainImg=p.imgs[0]||null;
+  let h=``;
+  if(mainImg){h+=`<img src="${mainImg}" class="img-hero" id="hero-img" onclick="openFullscreen(this.src)">`}
+  else{h+=`<div class="img-placeholder" style="height:140px"><div style="text-align:center;color:var(--tx4)">${ICO(36)}<p style="margin-top:6px;font-size:12px">Fără foto</p></div></div>`}
+  if(p.imgs.length>0){h+=`<div class="img-strip">`;p.imgs.forEach((img,i)=>h+=`<div class="img-wrap"><img src="${img}" class="img-thumb ${i===0?'active':''}" ondblclick="openFullscreen(this.src)" onclick="document.getElementById('hero-img').src='${img.replace(/'/g,"\\'")}';document.querySelectorAll('.img-thumb').forEach(t=>t.classList.remove('active'));this.classList.add('active')"><button class="img-rm" onclick="event.stopPropagation();removePhoto('',${idx},${i},true)">×</button></div>`);h+=`<button class="b bs" style="flex-shrink:0;height:45px;display:flex;align-items:center" onclick="triggerPhotoUpload('',${idx},true)">📷+</button></div>`}
+
+  h+=`<div style="padding:18px">`;
+  // Header with name and status
+  const sc=p.quantity===0?"var(--red)":p.quantity<=p.minQuantity?"var(--ylw)":"var(--grn)";
+  h+=`<div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:14px">
+    <div><h3 style="font-family:var(--fh);font-size:22px;font-weight:800;color:#e2e8f0">${esc(p.name)}</h3>
+    <p style="font-size:13px;color:var(--tx3)">${esc(p.manufacturer||'')} · ${esc(p.partNumber||'')}</p></div>
+    <div style="text-align:right"><div style="font-size:11px;color:var(--tx4)">STOC</div>
+    <div style="font-family:var(--fh);font-size:28px;font-weight:800;color:${sc}">${p.quantity}</div>
+    <div style="font-size:11px;color:var(--tx4)">min: ${p.minQuantity}</div></div></div>`;
+
+  if(!p.imgs.length)h+=`<button class="b bp" style="width:100%;margin-bottom:12px;padding:10px" onclick="triggerPhotoUpload('',${idx},true)">📷 Adaugă Fotografii</button>`;
+
+  // Info grid
+  h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+    <div class="ib"><div class="lbl">Locație</div><div style="font-size:15px;color:#e2e8f0">${esc(p.location||"—")}${p.raft?' — '+esc(p.raft):''}</div></div>
+    <div class="ib"><div class="lbl">Parc</div><div style="font-size:15px;color:#e2e8f0">${esc((db.parks||[]).find(pk=>pk.id===p.parkId)?.name||"Neasignat")}</div></div>
+    <div class="ib"><div class="lbl">Nr. Intern</div><div style="font-size:15px;color:var(--acc);font-family:monospace;font-weight:600">${esc(p.nrIntern||"—")}</div></div>
+    <div class="ib"><div class="lbl">Preț</div><div style="font-size:15px;color:#e2e8f0">${p.price?p.price+' EUR':"—"}</div></div></div>`;
+
+  // Supplier info
+  if(p.supplier?.name||p.supplier?.email||p.supplier?.phone){
+    h+=`<div class="ib" style="margin-bottom:14px"><div class="lbl" style="color:var(--acc);margin-bottom:6px">FURNIZOR</div>`;
+    if(p.supplier.name)h+=`<div style="font-size:14px;color:#e2e8f0;font-weight:600;margin-bottom:2px">🏢 ${esc(p.supplier.name)}</div>`;
+    if(p.supplier.contact)h+=`<div style="font-size:13px;color:var(--tx2)">👤 ${esc(p.supplier.contact)}</div>`;
+    if(p.supplier.email)h+=`<div style="font-size:13px"><a href="mailto:${esc(p.supplier.email)}" style="color:var(--acc);text-decoration:none">✉ ${esc(p.supplier.email)}</a></div>`;
+    if(p.supplier.phone)h+=`<div style="font-size:13px"><a href="tel:${esc(p.supplier.phone)}" style="color:var(--acc);text-decoration:none">📞 ${esc(p.supplier.phone)}</a></div>`;
+    if(p.supplier.address)h+=`<div style="font-size:12px;color:var(--tx3)">📍 ${esc(p.supplier.address)}</div>`;
+    if(p.supplier.leadTimeDays)h+=`<div style="font-size:12px;color:var(--tx3)">⏱ Lead time: ${p.supplier.leadTimeDays} zile</div>`;
+    h+=`</div>`}
+
+  if(p.notes)h+=`<div class="ib" style="margin-bottom:14px"><div class="lbl">Note</div><div style="font-size:14px;color:var(--tx2)">${esc(p.notes)}</div></div>`;
+
+  // ORDER BUTTON
+  h+=`<button class="b bo" style="width:100%;padding:12px;font-size:14px;margin-bottom:14px" onclick="closeMod(this);orderSpare(${idx})">⟳ LANSEAZĂ COMANDĂ</button>`;
+
+  // Edit form
+  h+=`<div style="border-top:1px solid var(--brd);padding-top:14px;margin-bottom:14px"><div style="color:var(--acc);font-size:14px;font-weight:700;letter-spacing:1px;margin-bottom:12px">✎ EDITARE</div>`;
+  h+=`<div style="display:grid;gap:8px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+      <div><label class="lbl">Nume</label><input id="es-n" value="${esc(p.name)}"></div>
+      <div><label class="lbl">Part# / Model</label><input id="es-p" value="${esc(p.partNumber||"")}"></div>
+      <div><label class="lbl">Producător</label><input id="es-mfr" value="${esc(p.manufacturer||"")}"></div>
+      <div><label class="lbl">Categorie</label><select id="es-c">${CATS.map(c=>`<option ${p.category===c?"selected":""}>${c}</option>`).join("")}</select></div>
+      <div><label class="lbl">Parc</label><select id="es-park"><option value="">— Neasignat —</option>${(db.parks||[]).map(pk=>`<option value="${pk.id}" ${p.parkId===pk.id?"selected":""}>${pk.name}</option>`).join("")}</select></div>
+      <div><label class="lbl">Cantitate</label><input type="number" id="es-q" min="0" value="${p.quantity}"></div>
+      <div><label class="lbl">Min</label><input type="number" id="es-m" min="0" value="${p.minQuantity}"></div>
+      <div><label class="lbl">Locație / Depozit</label><input id="es-l" value="${esc(p.location||"")}"></div>
+      <div><label class="lbl">Raft</label><input id="es-raft" value="${esc(p.raft||"")}"></div>
+      <div><label class="lbl">Număr Intern</label><input id="es-nrint" value="${esc(p.nrIntern||"")}"></div>
+      <div><label class="lbl">Preț EUR</label><input type="number" id="es-pr" min="0" value="${p.price||0}"></div>
+    </div>
+    <div style="border-top:1px solid var(--brd);padding-top:8px"><div class="lbl" style="color:var(--acc);font-size:12px;margin-bottom:6px">DATE FURNIZOR</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <div><label class="lbl">Furnizor</label><input id="es-s" value="${esc(p.supplier?.name||"")}"></div>
+        <div><label class="lbl">Contact</label><input id="es-sc" value="${esc(p.supplier?.contact||"")}"></div>
+        <div><label class="lbl">Email</label><input type="email" id="es-se" value="${esc(p.supplier?.email||"")}"></div>
+        <div><label class="lbl">Telefon</label><input id="es-sp" value="${esc(p.supplier?.phone||"")}"></div>
+        <div><label class="lbl">Adresă</label><input id="es-sa" value="${esc(p.supplier?.address||"")}"></div>
+        <div><label class="lbl">Lead Time (zile)</label><input type="number" id="es-sl" min="0" value="${p.supplier?.leadTimeDays||0}"></div>
+      </div>
+    </div>
+    <div><label class="lbl">Note</label><textarea id="es-no" rows="2">${esc(p.notes||"")}</textarea></div>
+    <button class="b bg" style="width:100%;padding:10px;font-size:13px" onclick="saveSpareEdit(${idx})">✓ SALVEAZĂ</button>
+  </div></div>`;
+
+  h+=`<div style="display:flex;gap:6px">
+    <button class="b bp" style="flex-shrink:0" onclick="triggerPhotoUpload('',${idx},true)">📷 Foto</button>
+    <button class="b bd" onclick="if(confirm('Ștergi piesa?')){db.spare.splice(${idx},1);save();closeMod(this);render()}">Șterge</button>
+    <button class="b bs" style="flex:1" onclick="closeMod(this)">Închide</button></div></div>`;
+  showMod(h);
+}
+
+function saveSpareEdit(idx){
+  const p=db.spare[idx];
+  p.name=document.getElementById('es-n').value;
+  p.partNumber=document.getElementById('es-p').value;
+  p.manufacturer=document.getElementById('es-mfr').value;
+  p.category=document.getElementById('es-c').value;
+  p.quantity=parseInt(document.getElementById('es-q').value)||0;
+  p.minQuantity=parseInt(document.getElementById('es-m').value)||0;
+  p.location=document.getElementById('es-l').value;p.raft=document.getElementById('es-raft').value;p.nrIntern=document.getElementById('es-nrint').value;
+  p.price=parseFloat(document.getElementById('es-pr').value)||0;
+  p.supplier={name:document.getElementById('es-s').value,contact:document.getElementById('es-sc').value,email:document.getElementById('es-se').value,phone:document.getElementById('es-sp').value,address:document.getElementById('es-sa').value,leadTimeDays:parseInt(document.getElementById('es-sl').value)||0};
+  p.notes=document.getElementById('es-no').value;
+  p.parkId=document.getElementById('es-park').value||'';
+  save();document.querySelectorAll('.mo').forEach(m=>m.remove());editSpare(idx);render();
+}
+
+/* === ORDER MODAL === */
+function orderSpare(idx){
+  const p=db.spare[idx];if(!p)return;
+  const est=new Date(Date.now()+(p.supplier?.leadTimeDays||30)*864e5).toLocaleDateString("ro-RO");
+  let h=`<div style="padding:20px"><h3 style="font-family:var(--fh);font-size:20px;font-weight:800;color:#e2e8f0;margin-bottom:4px">Lansare Comandă</h3>
+    <p style="font-size:14px;color:var(--tx3);margin-bottom:14px">${esc(p.name)} · ${esc(p.manufacturer||'')}</p>`;
+
+  // Supplier info
+  h+=`<div class="ib" style="margin-bottom:12px">`;
+  const si=[["Furnizor",p.supplier?.name],["Contact",p.supplier?.contact],["Email",p.supplier?.email],["Telefon",p.supplier?.phone],["Lead Time",(p.supplier?.leadTimeDays||"?")+" zile"],["Preț/buc",p.price?p.price+" EUR":"—"],["Stoc actual",p.quantity+" buc"]];
+  si.forEach(([l,v])=>{if(v)h+=`<div style="display:flex;justify-content:space-between;padding:3px 0;font-size:13px;color:var(--tx3)"><span>${l}</span><span style="color:var(--tx)">${esc(String(v))}</span></div>`});
+  h+=`</div>`;
+
+  h+=`<div style="margin-bottom:10px"><label class="lbl">Cantitate de comandat</label><input type="number" id="ord-qty" min="1" value="${Math.max((p.minQuantity||1)*2,2)}" oninput="document.getElementById('ord-total').textContent=(${p.price||0}*parseInt(this.value||1))+' EUR'"></div>`;
+  h+=`<div style="margin-bottom:10px"><label class="lbl">Note comandă</label><textarea id="ord-notes" rows="2" placeholder="Urgență, transport special..."></textarea></div>`;
+
+  h+=`<div class="ib" style="margin-bottom:14px;text-align:center;border-color:rgba(14,165,233,.15)">
+    <div class="lbl">Total Estimat</div>
+    <div id="ord-total" style="font-family:var(--fh);font-size:28px;font-weight:800;color:var(--acc);margin-top:3px">${(p.price||0)*Math.max((p.minQuantity||1)*2,2)} EUR</div>
+    <div style="font-size:12px;color:var(--tx4);margin-top:3px">Livrare estimată: ${est}</div></div>`;
+
+  h+=`<div style="display:grid;gap:6px">`;
+  // Email order button
+  if(p.supplier?.email){
+    h+=`<button class="b bo" style="width:100%;padding:12px;font-size:14px" onclick="sendOrderEmail(${idx})">✉ TRIMITE COMANDĂ PE EMAIL</button>`;
+  }
+  h+=`<button class="b bg" style="width:100%;padding:12px;font-size:13px" onclick="confirmOrder(${idx})">✓ CONFIRMĂ COMANDA</button>`;
+  h+=`<button class="b bs" style="width:100%" onclick="closeMod(this)">Anulează</button>`;
+  h+=`</div></div>`;
+  showMod(h);
+}
+
+function sendOrderEmail(idx){
+  const p=db.spare[idx];if(!p)return;
+  const qty=parseInt(document.getElementById('ord-qty').value)||1;
+  const notes=document.getElementById('ord-notes').value;
+  const total=(p.price||0)*qty;
+  const subject=encodeURIComponent(`Comandă: ${p.name} - ${qty} buc`);
+  const body=encodeURIComponent(`Bună ziua,\n\nDorim să comandăm:\n\nPiesă: ${p.name}\nPart#: ${p.partNumber||'—'}\nProducător: ${p.manufacturer||'—'}\nCantitate: ${qty} buc\nPreț unitar: ${p.price||'—'} EUR\nTotal estimat: ${total} EUR\n${notes?'\nNote: '+notes+'\n':''}\nVă mulțumim,\nBlue Line Energy`);
+  window.open(`mailto:${p.supplier.email}?subject=${subject}&body=${body}`);
+}
+
+function confirmOrder(idx){
+  const p=db.spare[idx];if(!p)return;
+  const qty=parseInt(document.getElementById('ord-qty').value)||1;
+  const notes=document.getElementById('ord-notes').value;
+  p.lastOrdered=new Date().toISOString().split('T')[0];
+  save();
+  document.querySelectorAll('.mo').forEach(m=>m.remove());
+  // Show confirmation
+  const est=new Date(Date.now()+(p.supplier?.leadTimeDays||30)*864e5).toLocaleDateString("ro-RO");
+  showMod(`<div style="text-align:center;padding:36px">
+    <div style="font-size:48px;color:var(--grn);margin-bottom:10px">✓</div>
+    <h3 style="font-family:var(--fh);font-size:22px;font-weight:800;color:var(--grn);margin-bottom:8px">Comandă Înregistrată!</h3>
+    <p style="font-size:15px;color:var(--tx2);margin-bottom:4px">${qty} × ${esc(p.name)}</p>
+    <p style="font-size:14px;color:var(--tx3)">Furnizor: ${esc(p.supplier?.name||'—')}</p>
+    ${p.supplier?.email?`<p style="font-size:13px;color:var(--tx3)">✉ ${esc(p.supplier.email)}</p>`:''}
+    <p style="font-size:13px;color:var(--tx3)">Livrare est: ${est}</p>
+    <p style="font-family:var(--fh);font-size:22px;font-weight:800;color:#e2e8f0;margin:10px 0">${(p.price||0)*qty} EUR</p>
+    <button class="b bp" style="padding:10px 24px;font-size:14px" onclick="closeMod(this);render()">OK</button></div>`);
+  render();
+}
+/* === SEND TO SPARE === */
+function sendToSpare(wtgId,idx){
+  const t=db.turbines.find(x=>x.id===wtgId);if(!t)return;
+  const c=t.components[idx];if(!c)return;
+  const cleanName=c.d.replace(/ \(×\d+\)/,'');
+  // Check if already in spare
+  const exists=db.spare.find(p=>p.name.toLowerCase()===cleanName.toLowerCase());
+  
+  let h=`<div style="padding:20px"><h3 style="font-family:var(--fh);font-size:20px;font-weight:800;color:#e2e8f0;margin-bottom:4px">📦 Trimite către Stoc</h3>
+    <p style="font-size:14px;color:var(--tx3);margin-bottom:14px">${esc(c.d)} — ${esc(c.m)} ${esc(c.md)}</p>`;
+  if(exists){h+=`<div class="ib" style="margin-bottom:12px;border-color:var(--ylw)"><div style="color:var(--ylw);font-size:13px">⚠ Piesa "${esc(exists.name)}" există deja în stoc (${exists.quantity} buc). Poți adăuga una nouă sau actualiza stocul existent.</div></div>`}
+  
+  h+=`<div style="display:grid;gap:8px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+      <div><label class="lbl">Nume Piesă</label><input id="ts-n" value="${esc(cleanName)}"></div>
+      <div><label class="lbl">Part# / Model</label><input id="ts-p" value="${esc(c.md||'')}"></div>
+      <div><label class="lbl">Producător</label><input id="ts-mfr" value="${esc(c.m||'')}"></div>
+      <div><label class="lbl">Categorie</label><select id="ts-c">${CATS.map(x=>`<option ${c.cat===x?"selected":""}>${x}</option>`).join("")}</select></div>
+      <div><label class="lbl">Parc</label><select id="ts-park"><option value="">— Neasignat —</option>${(db.parks||[]).map(p=>`<option value="${p.id}">${p.name}</option>`).join("")}</select></div>
+      <div><label class="lbl">Cantitate</label><input type="number" id="ts-q" min="0" value="0"></div>
+      <div><label class="lbl">Cantitate Min</label><input type="number" id="ts-m" min="0" value="1"></div>
+    </div>
+    <div style="border-top:1px solid var(--brd);padding-top:8px"><div class="lbl" style="color:var(--acc);font-size:12px;margin-bottom:6px">LOCAȚIE DEPOZIT</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+        <div><label class="lbl">Depozit / Locație</label><input id="ts-loc" placeholder="ex: Depozit A"></div>
+        <div><label class="lbl">Raft</label><input id="ts-raft" placeholder="ex: Raft 3"></div>
+        <div><label class="lbl">Număr Intern</label><input id="ts-nrint" placeholder="ex: BLE-0042"></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+      <div><label class="lbl">Preț EUR</label><input type="number" id="ts-pr" min="0" value="0"></div>
+      <div><label class="lbl">Lead Time (zile)</label><input type="number" id="ts-lt" min="0" value="30"></div>
+    </div>
+    <div style="border-top:1px solid var(--brd);padding-top:8px"><div class="lbl" style="color:var(--acc);font-size:12px;margin-bottom:6px">FURNIZOR</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <div><label class="lbl">Furnizor</label><input id="ts-s"></div>
+        <div><label class="lbl">Contact</label><input id="ts-sc"></div>
+        <div><label class="lbl">Email</label><input type="email" id="ts-se"></div>
+        <div><label class="lbl">Telefon</label><input id="ts-sp"></div>
+      </div>
+    </div>
+    <div><label class="lbl">Note</label><textarea id="ts-no" rows="2"></textarea></div>
+    <div style="display:flex;gap:6px">
+      <button class="b bg" style="flex:1;padding:12px;font-size:14px" onclick="submitToSpare()">✓ ADAUGĂ ÎN STOC</button>
+      <button class="b bs" onclick="closeMod(this)">Anulează</button>
+    </div>
+  </div></div>`;
+  showMod(h);
+}
+
+function submitToSpare(){
+  const n=document.getElementById('ts-n').value;if(!n){alert('Numele e obligatoriu!');return}
+  const loc=document.getElementById('ts-loc').value;
+  const raft=document.getElementById('ts-raft').value;
+  const nrint=document.getElementById('ts-nrint').value;
+  const locFull=[loc,raft].filter(x=>x).join(' — ')||'';
+  
+  db.spare.push({
+    name:n,
+    partNumber:document.getElementById('ts-p').value,
+    manufacturer:document.getElementById('ts-mfr').value,
+    category:document.getElementById('ts-c').value,
+    quantity:parseInt(document.getElementById('ts-q').value)||0,
+    minQuantity:parseInt(document.getElementById('ts-m').value)||0,
+    location:locFull,
+    raft:raft,
+    nrIntern:nrint,
+    price:parseFloat(document.getElementById('ts-pr').value)||0,
+    supplier:{
+      name:document.getElementById('ts-s').value,
+      contact:document.getElementById('ts-sc').value,
+      email:document.getElementById('ts-se').value,
+      phone:document.getElementById('ts-sp').value,
+      address:'',
+      leadTimeDays:parseInt(document.getElementById('ts-lt').value)||30
+    },
+    notes:document.getElementById('ts-no').value,
+    parkId:document.getElementById('ts-park').value||'',
+    imgs:[]
+  });
+  save();
+  document.querySelectorAll('.mo').forEach(m=>m.remove());
+  // Show confirmation and switch to spare view
+  showMod(`<div style="text-align:center;padding:36px">
+    <div style="font-size:48px;color:var(--grn);margin-bottom:10px">✓</div>
+    <h3 style="font-family:var(--fh);font-size:22px;font-weight:800;color:var(--grn);margin-bottom:8px">Adăugat în Stoc!</h3>
+    <p style="font-size:15px;color:var(--tx2)">${n}</p>
+    <div style="display:flex;gap:6px;justify-content:center;margin-top:16px">
+      <button class="b bp" style="padding:10px 20px;font-size:13px" onclick="S.mode='spare';closeMod(this);render()">Vezi Stocul</button>
+      <button class="b bs" style="padding:10px 20px" onclick="closeMod(this)">Închide</button>
+    </div></div>`);
+  render();
+}
+
+/* === THEME SYSTEM === */
+const THEMES=[
+  {id:"scenic",name:"Scenic (Turbine)",dot:"linear-gradient(135deg,#87CEEB,#4a9040)"},
+  {id:"navy",name:"Dark Navy",dot:"linear-gradient(135deg,#0a1423,#1a2d45)"},
+  {id:"slate",name:"Slate Blue",dot:"linear-gradient(135deg,#1e293b,#334155)"},
+  {id:"forest",name:"Forest Green",dot:"linear-gradient(135deg,#05140e,#14322a)"},
+  {id:"light",name:"Light / Alb",dot:"linear-gradient(135deg,#f0f4f8,#e2e8f0)"},
+  {id:"dark",name:"Negru Simplu",dot:"linear-gradient(135deg,#07090a,#151c22)"},
+  {id:"sunset",name:"Golden Sunset \u2600",dot:"linear-gradient(135deg,#c06820,#1a3a5a)"}
+];
+
+function loadTheme(){return localStorage.getItem("mm92theme")||"scenic"}
+function applyTheme(id){
+  document.body.className="";
+  document.body.classList.add("theme-"+id);
+  localStorage.setItem("mm92theme",id);
+  // Close menu if open
+  const m=document.querySelector(".theme-menu");
+  if(m)m.classList.remove("show");
+}
+function toggleThemeMenu(){
+  const m=document.querySelector(".theme-menu");
+  if(m)m.classList.toggle("show");
+}
+
+// Apply saved theme on load
+applyTheme(loadTheme());
+
+// Close theme menu on outside click
+document.addEventListener("click",e=>{
+  if(!e.target.closest(".theme-btn")){
+    const m=document.querySelector(".theme-menu");
+    if(m)m.classList.remove("show");
+  }
+});
+
+/* === PARKS === */
+function showParkDetail(idx){
+  const p=(db.parks||[])[idx];if(!p)return;
+  let h=`<div style="padding:20px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+      <div style="width:6px;height:40px;border-radius:3px;background:${p.color}"></div>
+      <div><h3 style="font-family:var(--fh);font-size:20px;font-weight:800;color:#e2e8f0">${esc(p.name)}</h3>
+        <p style="font-size:12px;color:var(--tx3)">${p.type==="eolian"?"\u26A1 Eolian":p.type==="solar"?"\u2600 Solar":"\u26A1\u2600 Mixt"} · PIF: ${p.year}</p></div>
+      <div style="margin-left:auto;text-align:right"><div style="font-family:var(--fh);font-size:32px;font-weight:900;color:${p.color}">${p.capacity} MW</div></div>
+    </div>`;
+
+  if(p.sub){
+    h+=`<div style="display:flex;gap:8px;margin-bottom:14px">`;
+    p.sub.forEach(s=>{
+      h+=`<div class="ib" style="flex:1;text-align:center"><div style="font-size:11px;color:var(--tx3)">${s.type==="eolian"?"\u26A1 Eolian":"\u2600 Solar"}</div><div style="font-family:var(--fh);font-size:22px;font-weight:800;color:#e2e8f0">${s.cap} MW</div><div style="font-size:10px;color:var(--tx4)">${esc(s.name)}</div></div>`;
+    });
+    h+=`</div>`;
+  }
+
+  h+=`<div class="ib" style="margin-bottom:10px"><div class="lbl">Locație</div><div style="font-size:14px;color:#e2e8f0">${esc(p.location)}</div></div>`;
+  h+=`<div class="ib" style="margin-bottom:10px"><div class="lbl">Capacități</div><div style="font-size:14px;color:#e2e8f0">${esc(p.units)}</div></div>`;
+  h+=`<div class="ib" style="margin-bottom:14px"><div class="lbl">Detalii Tehnice</div><div style="font-size:13px;color:var(--tx2);line-height:1.6;white-space:pre-wrap">${esc(p.details)}</div></div>`;
+
+  h+=`<button class="b bs" style="width:100%" onclick="closeMod(this)">Închide</button></div>`;
+  showMod(h);
+}
+
+function editParks(){
+  const parks=db.parks||[];
+  let h=`<div style="padding:20px"><h3 style="font-family:var(--fh);font-size:18px;font-weight:800;color:#e2e8f0;margin-bottom:14px">Editare Parcuri</h3>`;
+  h+=`<div id="parks-edit" style="display:grid;gap:10px">`;
+  parks.forEach((p,i)=>{
+    h+=`<div class="ib" style="border-left:3px solid ${p.color}">
+      <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:6px;align-items:end">
+        <div><label class="lbl">Nume</label><input id="pe-n-${i}" value="${esc(p.name)}"></div>
+        <div><label class="lbl">Capacitate MW</label><input type="number" step="0.01" id="pe-c-${i}" value="${p.capacity}"></div>
+        <div><label class="lbl">An PIF</label><input type="number" id="pe-y-${i}" value="${p.year}"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+        <div><label class="lbl">Tip</label><select id="pe-t-${i}"><option value="eolian" ${p.type==="eolian"?"selected":""}>Eolian</option><option value="solar" ${p.type==="solar"?"selected":""}>Solar</option><option value="mixt" ${p.type==="mixt"?"selected":""}>Mixt</option></select></div>
+        <div><label class="lbl">Unități</label><input id="pe-u-${i}" value="${esc(p.units)}"></div>
+      </div>
+      <div style="margin-top:6px"><label class="lbl">Locație</label><input id="pe-l-${i}" value="${esc(p.location)}"></div>
+      <div style="margin-top:6px"><label class="lbl">Detalii</label><textarea id="pe-d-${i}" rows="2">${esc(p.details)}</textarea></div>
+      <button class="b bd" style="margin-top:6px;font-size:9px" onclick="this.closest('.ib').remove();document.getElementById('pe-del-${i}').value='1'"><input type="hidden" id="pe-del-${i}" value="0">× Șterge Parc</button>
+    </div>`;
+  });
+  h+=`</div>`;
+
+  // Add new park
+  h+=`<div style="border-top:1px solid var(--brd);margin-top:14px;padding-top:12px"><div class="lbl" style="color:var(--acc);font-size:12px;margin-bottom:8px">ADAUGĂ PARC NOU</div>
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:6px">
+      <div><label class="lbl">Nume</label><input id="np-n" placeholder="ex: CEF Tulcea II"></div>
+      <div><label class="lbl">Capacitate MW</label><input type="number" step="0.01" id="np-c" value="0"></div>
+      <div><label class="lbl">An PIF</label><input type="number" id="np-y" value="2025"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+      <div><label class="lbl">Tip</label><select id="np-t"><option value="eolian">Eolian</option><option value="solar">Solar</option><option value="mixt">Mixt</option></select></div>
+      <div><label class="lbl">Unități</label><input id="np-u" placeholder="ex: 10× panouri 500W"></div>
+    </div>
+    <div style="margin-top:6px"><label class="lbl">Locație</label><input id="np-l"></div>
+    <button class="b bp" style="width:100%;margin-top:8px" onclick="addNewPark()">+ Adaugă Parc</button>
+  </div>`;
+
+  h+=`<div style="display:flex;gap:6px;margin-top:14px">
+    <button class="b bg" style="flex:1;padding:12px;font-size:14px" onclick="saveParks()">✓ SALVEAZĂ</button>
+    <button class="b bs" onclick="closeMod(this)">Anulează</button></div></div>`;
+  showMod(h);
+}
+
+function addNewPark(){
+  const n=document.getElementById("np-n").value;if(!n){alert("Nume obligatoriu!");return}
+  const colors=["#60a5fa","#34d399","#a78bfa","#f472b6","#fbbf24","#fb923c","#22d3ee","#f87171","#4ade80"];
+  const c=colors[Math.floor(Math.random()*colors.length)];
+  if(!db.parks)db.parks=[];
+  db.parks.push({
+    id:"p"+Date.now(),name:n,type:document.getElementById("np-t").value,
+    location:document.getElementById("np-l").value,
+    capacity:parseFloat(document.getElementById("np-c").value)||0,
+    units:document.getElementById("np-u").value,
+    year:parseInt(document.getElementById("np-y").value)||2025,
+    details:"",color:c
+  });
+  save();document.querySelectorAll(".mo").forEach(m=>m.remove());editParks();render();
+}
+
+function saveParks(){
+  const parks=db.parks||[];
+  parks.forEach((p,i)=>{
+    const del=document.getElementById("pe-del-"+i);
+    if(del&&del.value==="1"){p._del=true;return}
+    const n=document.getElementById("pe-n-"+i);if(!n)return;
+    p.name=n.value;
+    p.capacity=parseFloat(document.getElementById("pe-c-"+i).value)||0;
+    p.year=parseInt(document.getElementById("pe-y-"+i).value)||0;
+    p.type=document.getElementById("pe-t-"+i).value;
+    p.units=document.getElementById("pe-u-"+i).value;
+    p.location=document.getElementById("pe-l-"+i).value;
+    p.details=document.getElementById("pe-d-"+i).value;
+  });
+  db.parks=parks.filter(p=>!p._del);
+  save();document.querySelectorAll(".mo").forEach(m=>m.remove());render();
+}
+
+/* === PARK SELECTION FOR REGISTRY === */
+function selectPark(idx){
+  const p=(db.parks||[])[idx];
+  if(!p)return;
+  if(S.parkFilter===p.id){
+    // Deselect - show all
+    S.parkFilter="all";
+  } else {
+    S.parkFilter=p.id;
+    // Auto-select first turbine from this park
+    const parkTurbines=db.turbines.filter(t=>t.parkId===p.id);
+    if(parkTurbines.length>0) S.wtg=parkTurbines[0].id;
+  }
+  render();
+}
+
+/* === EXPORT EXCEL === */
+function exportRegistry(){
+  const t=db.turbines.find(x=>x.id===S.wtg);
+  if(!t)return;
+  const data=t.components.map((c,i)=>({
+    "Nr":i+1,
+    "Componentă":c.d,
+    "Producător":c.m,
+    "Model":c.md,
+    "ConstType":c.ct,
+    "Descriere":c.ctd,
+    "Categorie":c.cat,
+    "Note":c.notes||""
+  }));
+  const ws=XLSX.utils.json_to_sheet(data);
+  ws["!cols"]=[{wch:5},{wch:35},{wch:25},{wch:25},{wch:10},{wch:45},{wch:20},{wch:30}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,t.name);
+  XLSX.writeFile(wb,`Registru_${t.name.replace(/[^a-zA-Z0-9]/g,"_")}.xlsx`);
+}
+
+function exportAllRegistry(){
+  const wb=XLSX.utils.book_new();
+  db.turbines.forEach(t=>{
+    const data=t.components.map((c,i)=>({
+      "Nr":i+1,
+      "Componentă":c.d,
+      "Producător":c.m,
+      "Model":c.md,
+      "ConstType":c.ct,
+      "Descriere":c.ctd,
+      "Categorie":c.cat
+    }));
+    const ws=XLSX.utils.json_to_sheet(data);
+    ws["!cols"]=[{wch:5},{wch:35},{wch:25},{wch:25},{wch:10},{wch:45},{wch:20}];
+    const name=t.name.substring(0,31).replace(/[\\\/\?\*\[\]]/g,"");
+    XLSX.utils.book_append_sheet(wb,ws,name);
+  });
+  XLSX.writeFile(wb,"Registru_Complet_BLE.xlsx");
+}
+
+function exportSpare(){
+  const selP=S.sparePark==='all'?null:S.sparePark==='unassigned'?'_none':S.sparePark;
+  const list=selP===null?db.spare:selP==='_none'?db.spare.filter(s=>!s.parkId):db.spare.filter(s=>s.parkId===selP);
+  const parkName=S.sparePark==='all'?'Toate':S.sparePark==='unassigned'?'Neasignat':((db.parks||[]).find(p=>p.id===S.sparePark)?.name||'');
+
+  const data=list.map((p,i)=>({
+    "Nr":i+1,
+    "Nume":p.name,
+    "Part# / Model":p.partNumber||"",
+    "Producător":p.manufacturer||"",
+    "Nr. Intern":p.nrIntern||"",
+    "Cantitate":p.quantity,
+    "Minim":p.minQuantity,
+    "Locație":p.location||"",
+    "Raft":p.raft||"",
+    "Parc":(db.parks||[]).find(pk=>pk.id===p.parkId)?.name||"Neasignat",
+    "Preț EUR":p.price||0,
+    "Furnizor":p.supplier?.name||"",
+    "Contact":p.supplier?.contact||"",
+    "Email":p.supplier?.email||"",
+    "Telefon":p.supplier?.phone||"",
+    "Lead Time (zile)":p.supplier?.leadTimeDays||"",
+    "Note":p.notes||""
+  }));
+  const ws=XLSX.utils.json_to_sheet(data);
+  ws["!cols"]=[{wch:5},{wch:30},{wch:20},{wch:20},{wch:12},{wch:8},{wch:8},{wch:18},{wch:10},{wch:22},{wch:10},{wch:22},{wch:18},{wch:25},{wch:15},{wch:12},{wch:30}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,"Stoc Piese");
+  XLSX.writeFile(wb,`Stoc_Piese_${parkName.replace(/[^a-zA-Z0-9]/g,"_")}.xlsx`);
+}
+
+function exportParks(){
+  const data=(db.parks||[]).map((p,i)=>({
+    "Nr":i+1,
+    "Parc":p.name,
+    "Tip":p.type,
+    "Capacitate MW":p.capacity,
+    "Unități":p.units,
+    "An PIF":p.year,
+    "Locație":p.location,
+    "Detalii":p.details
+  }));
+  const ws=XLSX.utils.json_to_sheet(data);
+  ws["!cols"]=[{wch:5},{wch:30},{wch:10},{wch:14},{wch:40},{wch:8},{wch:50},{wch:60}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,"Parcuri");
+  XLSX.writeFile(wb,"Parcuri_BLE.xlsx");
+}
+
+/* === BACKUP & RESTORE === */
+function exportBackup(){
+  const backup={
+    version:"mm92v22",
+    date:new Date().toISOString(),
+    turbines:db.turbines,
+    spare:db.spare,
+    parks:db.parks,
+    cats:CATS
+  };
+  const json=JSON.stringify(backup,null,2);
+  const blob=new Blob([json],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download=`BLE_Backup_${new Date().toISOString().split("T")[0]}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importBackup(){
+  const inp=document.createElement("input");
+  inp.type="file";
+  inp.accept=".json";
+  inp.onchange=()=>{
+    const f=inp.files[0];if(!f)return;
+    const r=new FileReader();
+    r.onload=e=>{
+      try{
+        const backup=JSON.parse(e.target.result);
+        if(!backup.turbines&&!backup.spare&&!backup.parks){alert("Fișierul nu conține date valide!");return}
+        const msg=`Backup din ${backup.date||"necunoscut"}\n\n`+
+          `Turbine: ${backup.turbines?.length||0}\n`+
+          `Piese stoc: ${backup.spare?.length||0}\n`+
+          `Parcuri: ${backup.parks?.length||0}\n\n`+
+          `ATENȚIE: Datele curente vor fi înlocuite!\nContinui?`;
+        if(!confirm(msg))return;
+        if(backup.turbines)db.turbines=backup.turbines;
+        if(backup.spare)db.spare=backup.spare;
+        if(backup.parks)db.parks=backup.parks;
+        if(backup.cats){CATS.length=0;backup.cats.forEach(c=>CATS.push(c));saveCats()}
+        save();
+        alert("Backup restaurat cu succes!");
+        render();
+      }catch(err){alert("Eroare la citirea fișierului: "+err.message)}
+    };
+    r.readAsText(f);
+  };
+  inp.click();
+}
+
+render();
+</script>
+</body>
+</htmlDOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blue Line Energy — Registru & Stoc Piese</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07090a;--bg1:#090c0e;--bg2:#0b0f12;--bg3:#0c1014;--bg4:#080b0d;--brd:#151c22;--brd2:#1e2830;--tx:#e0e6ec;--tx2:#8aa8b8;--tx3:#6a8898;--tx4:#5a7888;--tx5:#2a3840;--acc:#0ea5e9;--grn:#34d399;--ylw:#fbbf24;--red:#f87171;--blu:#60a5fa;--fn:'IBM Plex Mono',monospace;--fh:'Outfit',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}body{background:transparent;color:var(--tx);font-family:var(--fn);font-size:18px;overflow-x:hidden}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:3px}
+input,select,textarea{background:var(--bg3);border:1px solid var(--brd2);color:var(--tx);padding:10px 14px;border-radius:4px;font-family:var(--fn);font-size:16px;outline:none;width:100%;transition:border-color .2s}
+input:focus,select:focus,textarea:focus{border-color:rgba(14,165,233,.25)}select option{background:var(--bg3)}textarea{resize:vertical}
+.b{padding:6px 12px;border-radius:4px;cursor:pointer;font-family:var(--fn);font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;transition:all .15s;border:1px solid transparent;display:inline-block}
+.bp{background:linear-gradient(135deg,#0c4a6e,#0369a1);color:#bae6fd;border-color:rgba(14,165,233,.19)}.bp:hover{background:linear-gradient(135deg,#0369a1,#0284c7)}
+.bs{background:#0f1318;color:var(--tx2);border-color:var(--brd2)}.bs:hover{border-color:var(--tx3);color:var(--tx)}
+.bd{background:#1a0808;color:var(--red);border-color:rgba(248,113,113,.13)}.bd:hover{background:#2a0c0c}
+.bg{background:linear-gradient(135deg,#064e3b,#047857);color:#a7f3d0;border-color:rgba(16,185,129,.19)}.bg:hover{background:linear-gradient(135deg,#047857,#059669)}
+.bo{background:linear-gradient(135deg,#7c2d12,#c2410c);color:#fed7aa;border-color:rgba(249,115,22,.25)}.bo:hover{background:linear-gradient(135deg,#c2410c,#ea580c)}
+.tg{display:inline-block;padding:2px 7px;border-radius:3px;font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase}
+.lbl{font-size:12px;color:var(--tx4);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:3px;font-weight:600}
+.ib{background:var(--bg4);border:1px solid var(--brd);border-radius:5px;padding:12px}
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;transition:opacity .2s}.mo.show{opacity:1}
+.ml{background:var(--bg2);border:1px solid rgba(14,165,233,.08);border-radius:10px;max-width:800px;width:96%;max-height:92vh;overflow-y:auto;box-shadow:0 0 80px rgba(14,165,233,.06);transform:translateY(10px);transition:transform .2s}.mo.show .ml{transform:translateY(0)}
+.wtab{padding:10px 18px;font-size:15px;font-weight:600;cursor:pointer;border:none;background:none;color:#8ab0c0;border-bottom:2px solid transparent;transition:all .15s;font-family:var(--fn)}.wtab.ac{color:var(--acc);border-bottom-color:var(--acc)}.wtab:hover{color:#93c5fd}
+.stab{padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:rgba(12,16,20,.7);color:#8ab0c0;border-radius:4px;font-family:var(--fn);transition:all .15s;border:1px solid var(--brd)}.stab.ac{background:rgba(14,165,233,.1);color:var(--acc);border-color:rgba(14,165,233,.25)}
+.row{transition:background .1s}.row:hover{background:#0d1216}
+.img-hero{width:100%;height:220px;object-fit:cover;border-radius:10px 10px 0 0;display:block;border-bottom:1px solid var(--brd)}
+.img-placeholder{width:100%;height:220px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0d1216,var(--bg2));border-radius:10px 10px 0 0;border-bottom:1px solid var(--brd)}
+.img-strip{display:flex;gap:6px;padding:8px 16px;overflow-x:auto;border-bottom:1px solid var(--brd)}
+.img-thumb{width:80px;height:60px;object-fit:cover;border-radius:4px;border:2px solid var(--brd);cursor:pointer;transition:border-color .15s;flex-shrink:0}.img-thumb:hover{border-color:var(--acc)}
+.img-thumb.active{border-color:var(--acc)}
+.img-rm{position:absolute;top:-4px;right:-4px;width:16px;height:16px;border-radius:50%;background:var(--red);color:#fff;border:none;font-size:9px;cursor:pointer;line-height:16px;text-align:center;display:none}.img-wrap:hover .img-rm{display:block}
+.img-wrap{position:relative;flex-shrink:0}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.fullscreen-overlay{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:200;display:flex;align-items:center;justify-content:center;cursor:zoom-out;opacity:0;transition:opacity .25s}
+.fullscreen-overlay.show{opacity:1}
+.fullscreen-overlay img{max-width:95vw;max-height:95vh;object-fit:contain;border-radius:6px;box-shadow:0 0 60px rgba(0,0,0,.5)}
+.fullscreen-close{position:fixed;top:16px;right:16px;z-index:201;background:rgba(255,255,255,.15);color:#fff;border:none;width:40px;height:40px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.fullscreen-close:hover{background:rgba(255,255,255,.3)}
+.img-hero{cursor:zoom-in}
+.img-thumb{cursor:pointer}
+
+/* SCENIC BACKGROUND */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: 
+    /* Sky gradient */
+    linear-gradient(180deg, 
+      #87CEEB 0%, 
+      #a8d8f0 30%,
+      #c5e4f5 50%,
+      #d4ecf7 65%,
+      #e8f4f8 75%,
+      #f0f7f0 85%,
+      #4a8c3f 85.1%,
+      #3d7a35 90%,
+      #2d6b28 100%
+    );
+}
+
+/* Hills overlay with curves */
+body::after {
+  content: '';
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 35vh;
+  z-index: -1;
+  background: 
+    /* Rolling hills */
+    radial-gradient(ellipse 80% 60% at 15% 100%, #3a8035 0%, transparent 70%),
+    radial-gradient(ellipse 70% 50% at 45% 100%, #4a9040 0%, transparent 65%),
+    radial-gradient(ellipse 90% 55% at 75% 100%, #358030 0%, transparent 70%),
+    radial-gradient(ellipse 60% 45% at 95% 100%, #4a8c3f 0%, transparent 60%);
+}
+
+/* Wind turbines as fixed SVG overlay */
+.bg-turbines {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.70;
+}
+
+/* Semi-transparent content overlay for readability */
+#app {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  background: rgba(7, 9, 10, 0.55);
+  backdrop-filter: blur(1px);
+}
+
+/* Clouds animation */
+@keyframes cloudFloat {
+  0% { transform: translateX(-10px); }
+  50% { transform: translateX(10px); }
+  100% { transform: translateX(-10px); }
+}
+@keyframes cloudFloat2 {
+  0% { transform: translateX(8px); }
+  50% { transform: translateX(-8px); }
+  100% { transform: translateX(8px); }
+}
+@keyframes bladeSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+
+/* === THEME SYSTEM === */
+body.theme-scenic .bg-turbines{opacity:.70}
+body.theme-scenic #app{background:rgba(7,9,10,.55)}
+
+body.theme-navy{background:#0a1423!important}
+body.theme-navy .bg-turbines{display:none}
+body.theme-navy #app{background:rgba(10,20,35,.92)}
+body.theme-navy header{background:rgba(14,26,46,.9)!important}
+
+body.theme-slate{background:#1e293b!important}
+body.theme-slate .bg-turbines{display:none}
+body.theme-slate #app{background:rgba(30,41,59,.92)}
+body.theme-slate header{background:rgba(39,53,72,.9)!important}
+body.theme-slate .stab{background:rgba(39,53,72,.8)!important}
+
+body.theme-forest{background:#05140e!important}
+body.theme-forest .bg-turbines{display:none}
+body.theme-forest #app{background:rgba(5,20,14,.92)}
+body.theme-forest header{background:rgba(10,32,24,.9)!important}
+body.theme-forest .stab{background:rgba(10,32,24,.8)!important}
+
+body.theme-light{background:#f0f4f8!important}
+body.theme-light .bg-turbines{display:none}
+body.theme-light #app{background:rgba(240,244,248,.96);color:#1e293b}
+body.theme-light header{background:rgba(255,255,255,.95)!important;border-color:#e2e8f0!important}
+body.theme-light h1{color:#1e293b!important}
+body.theme-light h1 span{color:#0369a1!important}
+body.theme-light .wtab{color:#64748b!important}
+body.theme-light .wtab.ac{color:#0369a1!important;border-bottom-color:#0369a1!important}
+body.theme-light .stab{background:#fff!important;color:#64748b!important;border-color:#e2e8f0!important}
+body.theme-light .stab.ac{background:rgba(3,105,161,.08)!important;color:#0369a1!important;border-color:rgba(3,105,161,.3)!important}
+body.theme-light table{color:#334155}
+body.theme-light .row:hover{background:rgba(14,165,233,.04)!important}
+body.theme-light th{color:#64748b!important}
+body.theme-light td{color:#475569!important}
+body.theme-light input,body.theme-light select,body.theme-light textarea{background:#fff!important;border-color:#d1d5db!important;color:#1e293b!important}
+body.theme-light .ib{background:#f8fafc!important;border-color:#e2e8f0!important}
+body.theme-light .ml{background:#fff!important;border-color:#e2e8f0!important}
+body.theme-light .tg{font-weight:800}
+body.theme-light .lbl{color:#64748b!important}
+body.theme-light .b.bs{background:#f1f5f9!important;color:#475569!important;border-color:#d1d5db!important}
+body.theme-light .b.bp{background:linear-gradient(135deg,#0369a1,#0284c7)!important;color:#fff!important}
+
+body.theme-dark{background:#07090a!important}
+body.theme-dark .bg-turbines{display:none}
+body.theme-dark #app{background:rgba(7,9,10,.98)}
+body.theme-dark header{background:rgba(9,12,14,.98)!important}
+
+/* Theme selector button */
+.theme-btn{position:relative;display:inline-block}
+.theme-menu{position:absolute;top:100%;right:0;margin-top:6px;background:rgba(11,15,18,.95);border:1px solid var(--brd);border-radius:8px;padding:8px;min-width:200px;z-index:60;display:none;backdrop-filter:blur(10px);box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.theme-menu.show{display:block}
+.theme-opt{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:6px;cursor:pointer;transition:background .15s;font-size:13px;color:#c8cfd5;border:none;background:none;width:100%;text-align:left;font-family:var(--fn)}
+.theme-opt:hover{background:rgba(14,165,233,.1)}
+.theme-opt.active{background:rgba(14,165,233,.15);color:var(--acc)}
+.theme-dot{width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,.2);flex-shrink:0}
+body.theme-light .theme-menu{background:rgba(255,255,255,.95)!important;border-color:#e2e8f0!important}
+body.theme-light .theme-opt{color:#334155!important}
+body.theme-light .theme-opt:hover{background:rgba(3,105,161,.06)!important}
+body.theme-light .theme-opt.active{color:#0369a1!important}
+
+
+/* === GOLDEN SUNSET OFFSHORE THEME === */
+body.theme-sunset{background:#1a1008!important}
+body.theme-sunset .bg-turbines{display:none}
+body.theme-sunset #app{background:rgba(20,14,5,.58)}
+body.theme-sunset header{background:rgba(25,18,8,.78)!important;backdrop-filter:blur(8px)!important}
+body.theme-sunset h1{color:#f5e6c8!important}
+body.theme-sunset h1 span{color:#f0a030!important}
+body.theme-sunset .wtab{color:#a08860!important}
+body.theme-sunset .wtab.ac{color:#f0a030!important;border-bottom-color:#f0a030!important}
+body.theme-sunset .stab{background:rgba(30,22,10,.7)!important;color:#b09870!important;border-color:rgba(200,160,80,.15)!important}
+body.theme-sunset .stab.ac{background:rgba(240,160,48,.1)!important;color:#f0a030!important;border-color:rgba(240,160,48,.3)!important}
+body.theme-sunset .b.bp{background:linear-gradient(135deg,#8b5e14,#b8860b)!important;color:#fef3c7!important;border-color:rgba(240,160,48,.3)!important}
+body.theme-sunset .b.bs{background:rgba(30,22,10,.6)!important;color:#b09870!important;border-color:rgba(200,160,80,.2)!important}
+body.theme-sunset .b.bg{background:linear-gradient(135deg,#5a6e20,#7a8e30)!important}
+body.theme-sunset .b.bo{background:linear-gradient(135deg,#8b4513,#cd6600)!important}
+body.theme-sunset input,body.theme-sunset select,body.theme-sunset textarea{background:rgba(20,14,5,.7)!important;border-color:rgba(200,160,80,.2)!important;color:#e8d8b8!important}
+body.theme-sunset .ib{background:rgba(20,14,5,.5)!important;border-color:rgba(200,160,80,.15)!important}
+body.theme-sunset .ml{background:rgba(25,18,8,.95)!important;border-color:rgba(240,160,48,.1)!important}
+body.theme-sunset .lbl{color:#907850!important}
+body.theme-sunset th{color:#907850!important}
+body.theme-sunset .row:hover{background:rgba(240,160,48,.06)!important}
+
+/* Sunset scene */
+.sunset-scene{position:fixed;inset:0;z-index:-1;overflow:hidden}
+.sunset-sky{position:absolute;inset:0;background:linear-gradient(180deg,#2c1810 0%,#5a2a10 15%,#c06820 30%,#e8a040 45%,#f0c060 55%,#e8b848 62%,#c09030 68%,#1a3a5a 68.5%,#15304a 75%,#102540 100%)}
+.sunset-sun{position:absolute;width:180px;height:180px;border-radius:50%;top:18%;left:50%;transform:translateX(-50%);background:radial-gradient(circle,#fff8e0 0%,#ffe080 30%,#f0a030 60%,rgba(240,160,48,0) 100%);box-shadow:0 0 80px 40px rgba(255,200,80,.3),0 0 160px 80px rgba(240,160,48,.15);animation:sunPulse 6s ease-in-out infinite}
+@keyframes sunPulse{0%,100%{box-shadow:0 0 80px 40px rgba(255,200,80,.3),0 0 160px 80px rgba(240,160,48,.15)}50%{box-shadow:0 0 100px 50px rgba(255,200,80,.35),0 0 200px 100px rgba(240,160,48,.2)}}
+
+/* Water */
+.sunset-water{position:absolute;bottom:0;left:0;right:0;height:35%;background:linear-gradient(180deg,rgba(26,58,90,.6) 0%,rgba(15,30,50,.8) 100%)}
+.sunset-water::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 8px,rgba(240,180,80,.04) 8px,rgba(240,180,80,.04) 10px);animation:waterShimmer 3s ease-in-out infinite}
+.sunset-water::after{content:'';position:absolute;top:0;left:30%;right:30%;height:60%;background:linear-gradient(180deg,rgba(255,200,80,.12) 0%,transparent 100%);filter:blur(20px);animation:waterReflect 4s ease-in-out infinite}
+@keyframes waterShimmer{0%,100%{transform:translateY(0)}50%{transform:translateY(2px)}}
+@keyframes waterReflect{0%,100%{opacity:.8;transform:scaleX(1)}50%{opacity:1;transform:scaleX(1.05)}}
+
+/* Clouds in sunset */
+.sunset-cloud{position:absolute;border-radius:50%;filter:blur(2px)}
+@keyframes driftRight{0%{transform:translateX(-5px)}50%{transform:translateX(5px)}100%{transform:translateX(-5px)}}
+@keyframes driftLeft{0%{transform:translateX(5px)}50%{transform:translateX(-5px)}100%{transform:translateX(5px)}}
+
+/* Offshore turbine silhouettes */
+.oturbine{position:absolute;bottom:32%}
+.oturbine .pole{width:4px;background:linear-gradient(180deg,#1a1008,#2a1a10);position:absolute;bottom:0;left:50%;transform:translateX(-50%);border-radius:2px}
+.oturbine .nacelle{width:12px;height:6px;background:#1a1008;position:absolute;top:0;left:50%;transform:translateX(-50%);border-radius:2px}
+.oturbine .blades{position:absolute;top:3px;left:50%;transform-origin:0 0}
+.oturbine .blade{position:absolute;width:3px;background:linear-gradient(0deg,#2a1a10,#3a2a18);border-radius:2px;transform-origin:bottom center;left:-1.5px}
+@keyframes spin1{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes spin2{from{transform:rotate(120deg)}to{transform:rotate(480deg)}}
+@keyframes spin3{from{transform:rotate(60deg)}to{transform:rotate(420deg)}}
+
+/* Reflection lines for turbines */
+.oturbine .reflection{position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);width:2px;height:40px;background:linear-gradient(180deg,rgba(30,20,10,.4),transparent);filter:blur(1px);animation:waterShimmer 3s ease-in-out infinite}
+
+body:not(.theme-sunset) .sunset-scene{display:none}
+
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+</head>
+<body>
+<div class="bg-turbines">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%">
+  <!-- Sky -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5ba3d9"/>
+      <stop offset="60%" stop-color="#87CEEB"/>
+      <stop offset="80%" stop-color="#a8d8f0"/>
+      <stop offset="100%" stop-color="#c5e8c5"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="80%" cy="15%" r="20%">
+      <stop offset="0%" stop-color="#fff8e1" stop-opacity=".6"/>
+      <stop offset="100%" stop-color="#fff8e1" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#sky)"/>
+  <rect width="1920" height="1080" fill="url(#sun)"/>
+  
+  <!-- Clouds -->
+  <g opacity=".85">
+    <ellipse cx="250" cy="150" rx="80" ry="30" fill="white" style="animation:cloudFloat 8s ease-in-out infinite"/>
+    <ellipse cx="290" cy="140" rx="60" ry="25" fill="white" style="animation:cloudFloat 8s ease-in-out infinite"/>
+    <ellipse cx="700" cy="100" rx="90" ry="35" fill="white" style="animation:cloudFloat2 10s ease-in-out infinite"/>
+    <ellipse cx="750" cy="90" rx="65" ry="28" fill="white" style="animation:cloudFloat2 10s ease-in-out infinite"/>
+    <ellipse cx="1300" cy="130" rx="70" ry="28" fill="white" style="animation:cloudFloat 12s ease-in-out infinite"/>
+    <ellipse cx="1340" cy="120" rx="55" ry="22" fill="white" style="animation:cloudFloat 12s ease-in-out infinite"/>
+    <ellipse cx="1650" cy="170" rx="60" ry="22" fill="white" style="animation:cloudFloat2 9s ease-in-out infinite"/>
+  </g>
+  
+  <!-- Hills -->
+  <path d="M0 750 Q200 680 400 720 Q600 760 800 710 Q1000 660 1200 700 Q1400 740 1600 690 Q1800 650 1920 700 L1920 1080 L0 1080Z" fill="#4a9040"/>
+  <path d="M0 800 Q300 740 500 770 Q700 800 900 760 Q1100 720 1300 760 Q1500 800 1700 750 Q1850 720 1920 750 L1920 1080 L0 1080Z" fill="#3d7a35"/>
+  <path d="M0 850 Q250 810 450 830 Q650 850 850 820 Q1050 790 1250 820 Q1450 850 1650 810 Q1800 790 1920 820 L1920 1080 L0 1080Z" fill="#2d6b28"/>
+  
+  <!-- Turbine 1 (far left, small) -->
+  <g transform="translate(180,520)">
+    <rect x="-3" y="0" width="6" height="200" fill="#e0e0e0" rx="2"/>
+    <g style="animation:bladeSpin 6s linear infinite;transform-origin:0 0">
+      <rect x="-2" y="-90" width="4" height="90" fill="#f0f0f0" rx="2" transform="rotate(0)"/>
+      <rect x="-2" y="-90" width="4" height="90" fill="#f0f0f0" rx="2" transform="rotate(120)"/>
+      <rect x="-2" y="-90" width="4" height="90" fill="#f0f0f0" rx="2" transform="rotate(240)"/>
+    </g>
+    <circle cx="0" cy="0" r="6" fill="#d0d0d0"/>
+  </g>
+  
+  <!-- Turbine 2 (left, medium) -->
+  <g transform="translate(420,440)">
+    <rect x="-4" y="0" width="8" height="270" fill="#e0e0e0" rx="3"/>
+    <g style="animation:bladeSpin 5s linear infinite;transform-origin:0 0">
+      <rect x="-3" y="-120" width="6" height="120" fill="#f0f0f0" rx="3" transform="rotate(30)"/>
+      <rect x="-3" y="-120" width="6" height="120" fill="#f0f0f0" rx="3" transform="rotate(150)"/>
+      <rect x="-3" y="-120" width="6" height="120" fill="#f0f0f0" rx="3" transform="rotate(270)"/>
+    </g>
+    <circle cx="0" cy="0" r="8" fill="#d0d0d0"/>
+  </g>
+  
+  <!-- Turbine 3 (center, large) -->
+  <g transform="translate(750,380)">
+    <rect x="-5" y="0" width="10" height="320" fill="#e0e0e0" rx="3"/>
+    <g style="animation:bladeSpin 4.5s linear infinite;transform-origin:0 0">
+      <rect x="-3" y="-140" width="6" height="140" fill="#f5f5f5" rx="3" transform="rotate(15)"/>
+      <rect x="-3" y="-140" width="6" height="140" fill="#f5f5f5" rx="3" transform="rotate(135)"/>
+      <rect x="-3" y="-140" width="6" height="140" fill="#f5f5f5" rx="3" transform="rotate(255)"/>
+    </g>
+    <circle cx="0" cy="0" r="9" fill="#d0d0d0"/>
+  </g>
+  
+  <!-- Turbine 4 (right, large) -->
+  <g transform="translate(1150,400)">
+    <rect x="-5" y="0" width="10" height="300" fill="#e0e0e0" rx="3"/>
+    <g style="animation:bladeSpin 5.5s linear infinite;transform-origin:0 0">
+      <rect x="-3" y="-135" width="6" height="135" fill="#f0f0f0" rx="3" transform="rotate(60)"/>
+      <rect x="-3" y="-135" width="6" height="135" fill="#f0f0f0" rx="3" transform="rotate(180)"/>
+      <rect x="-3" y="-135" width="6" height="135" fill="#f0f0f0" rx="3" transform="rotate(300)"/>
+    </g>
+    <circle cx="0" cy="0" r="9" fill="#d0d0d0"/>
+  </g>
+  
+  <!-- Turbine 5 (far right, medium) -->
+  <g transform="translate(1500,460)">
+    <rect x="-4" y="0" width="8" height="250" fill="#e0e0e0" rx="3"/>
+    <g style="animation:bladeSpin 6.5s linear infinite;transform-origin:0 0">
+      <rect x="-3" y="-110" width="6" height="110" fill="#f0f0f0" rx="3" transform="rotate(45)"/>
+      <rect x="-3" y="-110" width="6" height="110" fill="#f0f0f0" rx="3" transform="rotate(165)"/>
+      <rect x="-3" y="-110" width="6" height="110" fill="#f0f0f0" rx="3" transform="rotate(285)"/>
+    </g>
+    <circle cx="0" cy="0" r="7" fill="#d0d0d0"/>
+  </g>
+  
+  <!-- Turbine 6 (far right, small) -->
+  <g transform="translate(1750,500)">
+    <rect x="-3" y="0" width="6" height="210" fill="#e0e0e0" rx="2"/>
+    <g style="animation:bladeSpin 7s linear infinite;transform-origin:0 0">
+      <rect x="-2" y="-85" width="4" height="85" fill="#f0f0f0" rx="2" transform="rotate(80)"/>
+      <rect x="-2" y="-85" width="4" height="85" fill="#f0f0f0" rx="2" transform="rotate(200)"/>
+      <rect x="-2" y="-85" width="4" height="85" fill="#f0f0f0" rx="2" transform="rotate(320)"/>
+    </g>
+    <circle cx="0" cy="0" r="5" fill="#d0d0d0"/>
+  </g>
+</svg>
+</div>
+<div class="sunset-scene">
+  <div class="sunset-sky"></div>
+  <div class="sunset-sun"></div>
+  
+  <!-- Clouds -->
+  <div class="sunset-cloud" style="top:8%;left:10%;width:120px;height:30px;background:rgba(200,120,40,.25);animation:driftRight 12s ease-in-out infinite"></div>
+  <div class="sunset-cloud" style="top:12%;left:15%;width:80px;height:22px;background:rgba(220,140,50,.2);animation:driftRight 12s ease-in-out infinite"></div>
+  <div class="sunset-cloud" style="top:5%;right:20%;width:150px;height:35px;background:rgba(180,100,30,.3);animation:driftLeft 15s ease-in-out infinite"></div>
+  <div class="sunset-cloud" style="top:10%;right:15%;width:90px;height:25px;background:rgba(200,110,35,.2);animation:driftLeft 15s ease-in-out infinite"></div>
+  <div class="sunset-cloud" style="top:18%;left:35%;width:200px;height:28px;background:rgba(160,90,30,.15);animation:driftRight 18s ease-in-out infinite"></div>
+  <div class="sunset-cloud" style="top:22%;right:35%;width:160px;height:24px;background:rgba(180,100,35,.2);animation:driftLeft 14s ease-in-out infinite"></div>
+  <div class="sunset-cloud" style="top:3%;left:55%;width:100px;height:20px;background:rgba(150,80,25,.2);animation:driftRight 16s ease-in-out infinite"></div>
+
+  <div class="sunset-water"></div>
+
+  <!-- Offshore Turbines (silhouettes) -->
+  <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+    <!-- Turbine 1 far left small -->
+    <g transform="translate(150,380)">
+      <rect x="-2" y="0" width="4" height="300" fill="#1a1008" rx="2"/>
+      <g style="animation:spin1 8s linear infinite;transform-origin:0 0">
+        <rect x="-1.5" y="-70" width="3" height="70" fill="#2a1810" rx="1.5"/>
+        <rect x="-1.5" y="-70" width="3" height="70" fill="#2a1810" rx="1.5" transform="rotate(120)"/>
+        <rect x="-1.5" y="-70" width="3" height="70" fill="#2a1810" rx="1.5" transform="rotate(240)"/>
+      </g>
+      <circle cx="0" cy="0" r="4" fill="#1a1008"/>
+      <rect x="-1" y="300" width="2" height="50" fill="rgba(30,20,10,.2)" style="filter:blur(1px)"/>
+    </g>
+
+    <!-- Turbine 2 left medium -->
+    <g transform="translate(380,320)">
+      <rect x="-3" y="0" width="6" height="360" fill="#1a1008" rx="2"/>
+      <g style="animation:spin2 7s linear infinite;transform-origin:0 0">
+        <rect x="-2" y="-100" width="4" height="100" fill="#2a1810" rx="2"/>
+        <rect x="-2" y="-100" width="4" height="100" fill="#2a1810" rx="2" transform="rotate(120)"/>
+        <rect x="-2" y="-100" width="4" height="100" fill="#2a1810" rx="2" transform="rotate(240)"/>
+      </g>
+      <circle cx="0" cy="0" r="5" fill="#1a1008"/>
+      <rect x="-1.5" y="360" width="3" height="60" fill="rgba(30,20,10,.2)" style="filter:blur(1px)"/>
+    </g>
+
+    <!-- Turbine 3 center-left large -->
+    <g transform="translate(650,270)">
+      <rect x="-4" y="0" width="8" height="410" fill="#1a1008" rx="3"/>
+      <g style="animation:spin3 6s linear infinite;transform-origin:0 0">
+        <rect x="-2.5" y="-130" width="5" height="130" fill="#2a1810" rx="2"/>
+        <rect x="-2.5" y="-130" width="5" height="130" fill="#2a1810" rx="2" transform="rotate(120)"/>
+        <rect x="-2.5" y="-130" width="5" height="130" fill="#2a1810" rx="2" transform="rotate(240)"/>
+      </g>
+      <circle cx="0" cy="0" r="6" fill="#1a1008"/>
+      <rect x="-2" y="410" width="4" height="70" fill="rgba(30,20,10,.25)" style="filter:blur(2px)"/>
+    </g>
+
+    <!-- Turbine 4 center BIGGEST -->
+    <g transform="translate(960,240)">
+      <rect x="-5" y="0" width="10" height="440" fill="#1a1008" rx="3"/>
+      <g style="animation:spin1 5.5s linear infinite;transform-origin:0 0">
+        <rect x="-3" y="-145" width="6" height="145" fill="#2a1810" rx="2.5"/>
+        <rect x="-3" y="-145" width="6" height="145" fill="#2a1810" rx="2.5" transform="rotate(120)"/>
+        <rect x="-3" y="-145" width="6" height="145" fill="#2a1810" rx="2.5" transform="rotate(240)"/>
+      </g>
+      <circle cx="0" cy="0" r="7" fill="#1a1008"/>
+      <rect x="-2.5" y="440" width="5" height="80" fill="rgba(30,20,10,.3)" style="filter:blur(2px)"/>
+    </g>
+
+    <!-- Turbine 5 center-right large -->
+    <g transform="translate(1250,280)">
+      <rect x="-4" y="0" width="8" height="400" fill="#1a1008" rx="3"/>
+      <g style="animation:spin2 6.5s linear infinite;transform-origin:0 0">
+        <rect x="-2.5" y="-125" width="5" height="125" fill="#2a1810" rx="2"/>
+        <rect x="-2.5" y="-125" width="5" height="125" fill="#2a1810" rx="2" transform="rotate(120)"/>
+        <rect x="-2.5" y="-125" width="5" height="125" fill="#2a1810" rx="2" transform="rotate(240)"/>
+      </g>
+      <circle cx="0" cy="0" r="6" fill="#1a1008"/>
+      <rect x="-2" y="400" width="4" height="65" fill="rgba(30,20,10,.25)" style="filter:blur(2px)"/>
+    </g>
+
+    <!-- Turbine 6 right medium -->
+    <g transform="translate(1500,330)">
+      <rect x="-3" y="0" width="6" height="350" fill="#1a1008" rx="2"/>
+      <g style="animation:spin3 7.5s linear infinite;transform-origin:0 0">
+        <rect x="-2" y="-95" width="4" height="95" fill="#2a1810" rx="2"/>
+        <rect x="-2" y="-95" width="4" height="95" fill="#2a1810" rx="2" transform="rotate(120)"/>
+        <rect x="-2" y="-95" width="4" height="95" fill="#2a1810" rx="2" transform="rotate(240)"/>
+      </g>
+      <circle cx="0" cy="0" r="5" fill="#1a1008"/>
+      <rect x="-1.5" y="350" width="3" height="55" fill="rgba(30,20,10,.2)" style="filter:blur(1px)"/>
+    </g>
+
+    <!-- Turbine 7 far right small -->
+    <g transform="translate(1720,370)">
+      <rect x="-2.5" y="0" width="5" height="310" fill="#1a1008" rx="2"/>
+      <g style="animation:spin1 9s linear infinite;transform-origin:0 0">
+        <rect x="-1.5" y="-75" width="3" height="75" fill="#2a1810" rx="1.5"/>
+        <rect x="-1.5" y="-75" width="3" height="75" fill="#2a1810" rx="1.5" transform="rotate(120)"/>
+        <rect x="-1.5" y="-75" width="3" height="75" fill="#2a1810" rx="1.5" transform="rotate(240)"/>
+      </g>
+      <circle cx="0" cy="0" r="4" fill="#1a1008"/>
+      <rect x="-1" y="310" width="2" height="45" fill="rgba(30,20,10,.15)" style="filter:blur(1px)"/>
+    </g>
+
+    <!-- Turbine 8 far far right tiny -->
+    <g transform="translate(1850,400)">
+      <rect x="-2" y="0" width="4" height="280" fill="#1a1008" rx="1.5"/>
+      <g style="animation:spin2 10s linear infinite;transform-origin:0 0">
+        <rect x="-1" y="-60" width="2" height="60" fill="#2a1810" rx="1"/>
+        <rect x="-1" y="-60" width="2" height="60" fill="#2a1810" rx="1" transform="rotate(120)"/>
+        <rect x="-1" y="-60" width="2" height="60" fill="#2a1810" rx="1" transform="rotate(240)"/>
+      </g>
+      <circle cx="0" cy="0" r="3" fill="#1a1008"/>
+    </g>
+  </svg>
+</div>
+<div id="app"></div>
+
+</body>
+</html>
